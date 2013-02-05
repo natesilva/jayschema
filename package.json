@@ -1,0 +1,25 @@
+{
+  "author": "Nate Silva <nate@natesilva.com> (http://natesilva.com/)",
+  "name": "jjschema",
+  "description": "A comprehensive JSON Schema validator for Node.js",
+  "version": "0.0.1-alpha",
+  "homepage": "https://github.com/natesilva/jjschema",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/natesilva/jjschema.git"
+  },
+  "main": "./jjschema.js",
+  "keywords": [
+    "json",
+    "schema",
+    "validation"
+  ],
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "should": "~1.2.1",
+    "mocha": "~1.8.1"
+  }
+}
