@@ -13,6 +13,7 @@ var jsonPointer = require('./jsonPointer.js')
 
 
 var DEFAULT_SCHEMA_VERSION = 'http://json-schema.org/draft-04/schema#';
+var ANON_URI_SCHEME = 'anon-schema';
 
 var schemaTestSets = {
   'http://json-schema.org/draft-04/schema#': require('./suites/draft-04.js')
@@ -194,7 +195,7 @@ JaySchema.prototype._validateImpl = function(instance, schema, resolutionScope,
   instanceContext)
 {
   // for schemas that have no id, use an internal anonymous id
-  var schemaId = schema.id || 'file:///' + uuid.uuid4() + '#';
+  var schemaId = schema.id || ANON_URI_SCHEME + '://' + uuid.uuid4() + '#';
   this.register(schema, resolutionScope, schemaId);
   resolutionScope = resolutionScope || schemaId;
 
@@ -233,7 +234,7 @@ JaySchema.prototype._validateImpl = function(instance, schema, resolutionScope,
 JaySchema.prototype.validate = function(instance, schema, callback)
 {
   // for schemas that have no id, use an internal anonymous id
-  var schemaId = schema.id || 'file:///' + uuid.uuid4() + '#';
+  var schemaId = schema.id || ANON_URI_SCHEME + '://' + uuid.uuid4() + '#';
   this.register(schema, null, schemaId);
 
   // preload referenced schemas (recursively)
