@@ -8,6 +8,7 @@ var jsonPointer = require('./jsonPointer.js')
   , url = require('url')
   , downloadSchema = require('./downloadSchema.js')
   , Errors = require('./errors.js')
+  , uuid = require('./uuid.js')
   ;
 
 
@@ -16,48 +17,6 @@ var DEFAULT_SCHEMA_VERSION = 'http://json-schema.org/draft-04/schema#';
 var schemaTestSets = {
   'http://json-schema.org/draft-04/schema#': require('./suites/draft-04.js')
 };
-
-// ******************************************************************
-// generate a V4 UUID
-// ******************************************************************
-function uuid() {
-  var bytes = [];
-var index;
-
-  var min = 0x00, max = 0xFF;
-  for (index = 0; index !== 16; ++index) {
-    bytes.push(Math.floor(Math.random() * (max - min + 1)) + min);
-  }
-
-  // must be 4X hex
-  bytes[6] = bytes[6] & 0x4F | 0x40;
-
-  // must be 8X, 9X, AX, BX
-  bytes[8] = bytes[8] & 0xBF | 0x80;
-
-  var result = '';
-  for (index = 0; index !== 4; ++ index) {
-    result += ('0' + bytes[index].toString(16)).slice(-2);
-  }
-  result += '-';
-  for (index = 4; index !== 6; ++ index) {
-    result += ('0' + bytes[index].toString(16)).slice(-2);
-  }
-  result += '-';
-  for (index = 6; index !== 8; ++ index) {
-    result += ('0' + bytes[index].toString(16)).slice(-2);
-  }
-  result += '-';
-  for (index = 8; index !== 10; ++ index) {
-    result += ('0' + bytes[index].toString(16)).slice(-2);
-  }
-  result += '-';
-  for (index = 10; index !== 16; ++ index) {
-    result += ('0' + bytes[index].toString(16)).slice(-2);
-  }
-
-  return result;
-}
 
 // ******************************************************************
 // Constructor
@@ -235,7 +194,7 @@ JaySchema.prototype._validateImpl = function(instance, schema, resolutionScope,
   instanceContext)
 {
   // for schemas that have no id, use an internal anonymous id
-  var schemaId = schema.id || 'file:///' + uuid() + '#';
+  var schemaId = schema.id || 'file:///' + uuid.uuid4() + '#';
   this.register(schema, resolutionScope, schemaId);
   resolutionScope = resolutionScope || schemaId;
 
@@ -274,7 +233,7 @@ JaySchema.prototype._validateImpl = function(instance, schema, resolutionScope,
 JaySchema.prototype.validate = function(instance, schema, callback)
 {
   // for schemas that have no id, use an internal anonymous id
-  var schemaId = schema.id || 'file:///' + uuid() + '#';
+  var schemaId = schema.id || 'file:///' + uuid.uuid4() + '#';
   this.register(schema, null, schemaId);
 
   // preload referenced schemas (recursively)
