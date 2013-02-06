@@ -1,5 +1,5 @@
 //
-// JSON Schema (draft v4) validator for Node.js.
+// JaySchema (draft v4) validator for Node.js.
 //
 
 'use strict';
@@ -62,7 +62,7 @@ var index;
 // ******************************************************************
 // Constructor
 // ******************************************************************
-var JJSchema = function(maxPreload) {
+var JaySchema = function(maxPreload) {
   this.schemas = {};
   this._urlsRequested = [];
   this.maxPreload = maxPreload || 5;
@@ -71,7 +71,7 @@ var JJSchema = function(maxPreload) {
 // ******************************************************************
 // Register the given schema in our library of schemas.
 // ******************************************************************
-JJSchema.prototype.register = function(schema, resolutionScope, _fallbackId,
+JaySchema.prototype.register = function(schema, resolutionScope, _fallbackId,
   _path)
 {
   // We stash each schema that has a unique URI, not including
@@ -120,7 +120,7 @@ JJSchema.prototype.register = function(schema, resolutionScope, _fallbackId,
 // Get a previously-registered schema, if available. Returns null if
 // the schema is not available.
 // ******************************************************************
-JJSchema.prototype.getSchema = function(resolvedId) {
+JaySchema.prototype.getSchema = function(resolvedId) {
   var parts = url.parse(resolvedId);
   var fragment = parts.hash;
   delete parts.hash;
@@ -156,14 +156,14 @@ JJSchema.prototype.getSchema = function(resolvedId) {
 // ******************************************************************
 // [static] Helper to gather all $refs values from the given object
 // ******************************************************************
-JJSchema._gatherRefs = function(obj) {
+JaySchema._gatherRefs = function(obj) {
   var result = [];
   var keys = Object.keys(obj);
   if (obj.$ref) { result.push(obj.$ref); }
   for (var index = 0, len = keys.length; index !== len; ++index) {
     var key = keys[index];
     if (typeof obj[key] === 'object') {
-      result = result.concat(JJSchema._gatherRefs(obj[key]));
+      result = result.concat(JaySchema._gatherRefs(obj[key]));
     }
   }
   return result;
@@ -178,12 +178,12 @@ JJSchema._gatherRefs = function(obj) {
 // schema, it will be fetched etc. Once this reaches the specified
 // depth, an error will be returned.
 // ******************************************************************
-JJSchema.prototype._recursivePreload = function(schema, depth, callback) {
+JaySchema.prototype._recursivePreload = function(schema, depth, callback) {
   var self = this;
   var errs = [];
   var index, len, ref;
 
-  var refs = JJSchema._gatherRefs(schema);
+  var refs = JaySchema._gatherRefs(schema);
 
   refs = refs.filter(function(ref) {
     if (this.schemas.hasOwnProperty(ref)) { return false; }
@@ -231,7 +231,7 @@ JJSchema.prototype._recursivePreload = function(schema, depth, callback) {
 // ******************************************************************
 // The main validation guts (internal implementation).
 // ******************************************************************
-JJSchema.prototype._validateImpl = function(instance, schema, resolutionScope,
+JaySchema.prototype._validateImpl = function(instance, schema, resolutionScope,
   instanceContext)
 {
   // for schemas that have no id, use an internal anonymous id
@@ -271,7 +271,7 @@ JJSchema.prototype._validateImpl = function(instance, schema, resolutionScope,
 // ******************************************************************
 // The main validation function (public API). Our raison d'être.
 // ******************************************************************
-JJSchema.prototype.validate = function(instance, schema, callback)
+JaySchema.prototype.validate = function(instance, schema, callback)
 {
   // for schemas that have no id, use an internal anonymous id
   var schemaId = schema.id || 'file:///' + uuid() + '#';
@@ -292,4 +292,4 @@ JJSchema.prototype.validate = function(instance, schema, callback)
   }
 };
 
-module.exports = JJSchema;
+module.exports = JaySchema;

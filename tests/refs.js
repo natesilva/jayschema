@@ -4,7 +4,7 @@
 
 
 var should = require('should')
-  , JJSchema = require('../jjschema.js')
+  , JaySchema = require('../jayschema.js')
   ;
 
 describe('JSON references:',
@@ -12,7 +12,7 @@ describe('JSON references:',
 {
   describe('reference previously manually-registered schema:', function() {
 
-    var jj = new JJSchema();
+    var jj = new JaySchema();
     jj.debug = true;
     var sch;
 

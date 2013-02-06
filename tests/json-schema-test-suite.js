@@ -12,7 +12,7 @@
 
 
 var should = require('should')
-  , JJSchema = require('../jjschema.js')
+  , JaySchema = require('../jayschema.js')
   , fs = require('fs')
   , path = require('path')
   ;
@@ -126,7 +126,7 @@ describe('JSON Schema Test Suite:', function() {
 
           if (!shouldSkip(jsonFile, group.description, test.description)) {
             it(test.description, function() {
-              var jj = new JJSchema();
+              var jj = new JaySchema();
               var result = jj.validate(test.data, group.schema);
               if (test.valid) {
                 result.should.be.empty;

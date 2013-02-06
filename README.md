@@ -1,8 +1,8 @@
-# JJSchema: JavaScript JSON Schema Validator
+# JaySchema: JavaScript JSON Schema Validator
 
 ## A comprehensive validator for Node.js
 
-**JJSchema** is a validator for testing JSON objects against a [**JSON Schema Draft v4**](http://json-schema.org/documentation.html) schema.
+**JaySchema** is a validator for testing JSON objects against a [**JSON Schema Draft v4**](http://json-schema.org/documentation.html) schema.
 
 This is the first release and should be considered alpha-quality code.
 
@@ -14,13 +14,13 @@ Maybe you have a JSON-based API and you need to make sure incoming values are va
 
 You can use an [ORM](https://npmjs.org/browse/keyword/orm) to do this, but that solution is overkill if you only need validation. It also ties you to a single database backend. If you want to change databases, you’re stuck. You may even want to use multiple databases simultaneously—for example, session data in Redis and permanent data in MongoDB—and you want to validate both.
 
-With **JJSchema** you create a rich JSON Schema describing your documents and then validate documents against it. You control the validation. It’s not tied to any database or backend. You get to use the really nice JSON Schema syntax (see the [official examples](http://json-schema.org/examples.html)), you get useful error messages, and it can even do some types of validation that aren’t supported by popular ORMs.
+With **JaySchema** you create a rich JSON Schema describing your documents and then validate documents against it. You control the validation. It’s not tied to any database or backend. You get to use the really nice JSON Schema syntax (see the [official examples](http://json-schema.org/examples.html)), you get useful error messages, and it can even do some types of validation that aren’t supported by popular ORMs.
 
 ## Features
 
 * **Comprehensive:** Covers all of the spec except the optional `format` property.
 * **Tested:**
-	* Passes all tests from the official [JSON Schema Test Suite](https://github.com/json-schema/JSON-Schema-Test-Suite) except those which are not applicable to Draft v4. (The Test Suite was designed with v3 in mind. When v4 tests are available, **JJSchema** will be tested against them.)
+	* Passes all tests from the official [JSON Schema Test Suite](https://github.com/json-schema/JSON-Schema-Test-Suite) except those which are not applicable to Draft v4. (The Test Suite was designed with v3 in mind. When v4 tests are available, **JaySchema** will be tested against them.)
 	* Passes hundreds of other unit tests, most written to test very specific aspects of the draft spec.
 * **Friendly:** Error messages that tell you:
 	* The exact location in your document where validation failed.
@@ -32,30 +32,30 @@ With **JJSchema** you create a rich JSON Schema describing your documents and th
 
 ## Compatibility
 
-**JJSchema** is compatible with [**JSON Schema Draft v4**](http://json-schema.org/documentation.html). It will __not__ validate most Draft v3 or earlier schemas.
+**JaySchema** is compatible with [**JSON Schema Draft v4**](http://json-schema.org/documentation.html). It will __not__ validate most Draft v3 or earlier schemas.
 
 ## Installation
 
-    npm install jjschema
+    npm install jayschema
 
 ## Usage
 
 ```
 // synchronous
-var JJSchema = require('jjschema');
+var JaySchema = require('jayschema');
 var schema = { … };
 var doc = { … };
-var jj = new JJSchema();
+var jj = new JaySchema();
 var errors = jj.validate(doc, schema);
 if (errors.length) { console.error(errors); }
 else { console.log('document validates!'); }
 ```
 ```
 // async
-var JJSchema = require('jjschema');
+var JaySchema = require('jayschema');
 var schema = { … };
 var doc = { … };
-var jj = new JJSchema();
+var jj = new JaySchema();
 jj.validate(doc, schema, function(errors) {
 	if (errors.length) { console.error(errors); }
 	else { console.log('document validates!'); }
@@ -92,7 +92,7 @@ var doc = {
     "age": 22
 };
 
-var jj = new JJSchema();
+var jj = new JaySchema();
 console.log(jj.validate(doc, schema));
 ```
 
@@ -128,11 +128,11 @@ Note that some tests will appear as a yellow dot, indicating they are slow. This
 
 ## API
 
-### JJSchema([maxPreload])
+### JaySchema([maxPreload])
 
 **(Constructor)** The `maxPreload` option, if specified, is the maximum depth to recurse when retrieving `$ref` schemas over HTTP. The default is `5`.
 
-### JJSchema.prototype.validate(instance, schema [, callback])
+### JaySchema.prototype.validate(instance, schema [, callback])
 
 #### Return value
 
@@ -151,6 +151,6 @@ If your schema is self contained (or if all external schemas have been registere
 
 In asynchronous mode, external schema references (those with an HTTP URI) will be retrieved automatically (a process called *preloading*). In addition, any external schema references within *those* schemas will be retrieved, etc. To prevent infinite recursion, a `maxPreload` option can be passed to the constructor (default: `5`). This is the maximum depth of schema referrals to allow.
 
-### JJSchema.prototype.register(schema [, resolutionScope])
+### JaySchema.prototype.register(schema [, resolutionScope])
 
 Manually register a schema. Useful if you have several related schemas you are working with. The optional `resolutionScope` can be used to register a schema that doesn’t have an `id` property, or which is referenced using a unique resolution scope.

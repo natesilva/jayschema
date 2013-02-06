@@ -1,14 +1,14 @@
 {
   "author": "Nate Silva <nate@natesilva.com> (http://natesilva.com/)",
-  "name": "jjschema",
+  "name": "jayschema",
   "description": "A comprehensive JSON Schema validator for Node.js",
   "version": "0.0.1-alpha",
-  "homepage": "https://github.com/natesilva/jjschema",
+  "homepage": "https://github.com/natesilva/jayschema",
   "repository": {
     "type": "git",
-    "url": "git://github.com/natesilva/jjschema.git"
+    "url": "git://github.com/natesilva/jayschema.git"
   },
-  "main": "./jjschema.js",
+  "main": "./jayschema.js",
   "keywords": [
     "json",
     "schema",

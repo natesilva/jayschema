@@ -4,7 +4,7 @@
 
 
 var should = require('should')
-  , JJSchema = require('../jjschema.js')
+  , JaySchema = require('../jayschema.js')
   , fs = require('fs')
   , path = require('path')
   ;
@@ -73,7 +73,7 @@ describe('Our test suite (running async):', function() {
 
           if (!shouldSkip(jsonFile, group.description, test.description)) {
             it(test.description, function(done) {
-              var jj = new JJSchema();
+              var jj = new JaySchema();
               jj.validate(test.data, group.schema, function(errs) {
                 if (test.valid) {
                   should.not.exist(errs);
