@@ -121,6 +121,7 @@ The author would appreciate reports of unit test failures. Use the Github “Iss
 
 * `git clone` the repo.
 * Ensure you have [Mocha](http://visionmedia.github.com/mocha/) installed.
+* From the repo top directory, run `npm install` to install dev-time dependencies.
 * From the repo top directory, run `mocha tests`.
 
 Note that some tests will appear as a yellow dot, indicating they are slow. This is normal for a few tests that do network I/O and does not need to be reported.
