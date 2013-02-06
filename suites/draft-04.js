@@ -602,20 +602,22 @@ TestSet.prototype.anyOf = function() {
 TestSet.prototype.oneOf = function() {
   var self = this;
   var errors = [], desc;
-  var validCount = 0;
+  var validAgainst = [];
 
   for (var index = 0; index < this.schema.oneOf.length; ++index) {
     var errs = self.validate(this.inst, this.schema.oneOf[index],
       this.resolutionScope + '/oneOf/' + index, this.instanceContext);
-    if (errs.length === 0) { validCount++; }
-    if (validCount > 1) { break; }
+    if (errs.length === 0) {
+      validAgainst.push(this.resolutionScope + '/oneOf/' + index);
+    }
   }
 
-  if (validCount !== 1) {
-    if (validCount === 0) {
+  if (validAgainst.length !== 1) {
+    if (validAgainst.length === 0) {
       desc = 'does not validate against any of these schemas';
     } else {
-      desc = 'validates against more than one of these schemas';
+      desc = 'validates against more than one of these schemas (' +
+        validAgainst + ')';
     }
     desc += '; must validate against one and only one of them';
     errors.push(new Errors.ValidationError(this.resolutionScope,
