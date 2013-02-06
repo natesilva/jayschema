@@ -40,7 +40,7 @@ With **JaySchema** you create a rich JSON Schema describing your documents and t
 
 ## Usage
 
-```
+```js
 // synchronous
 var JaySchema = require('jayschema');
 var schema = { … };
@@ -50,7 +50,7 @@ var errors = jj.validate(doc, schema);
 if (errors.length) { console.error(errors); }
 else { console.log('document validates!'); }
 ```
-```
+```js
 // async
 var JaySchema = require('jayschema');
 var schema = { … };
@@ -66,7 +66,7 @@ jj.validate(doc, schema, function(errors) {
 
 Here’s a simple validation showing how error messages work:
 
-```
+```js
 var schema = {
     "title": "Example Schema",
     "id": "http://some.site.somewhere/user-schema#",
@@ -98,7 +98,7 @@ console.log(jj.validate(doc, schema));
 
 The result looks like this:
 
-```
+```js
 [ { instanceContext: '#',
     resolutionScope: 'http://some.site.somewhere/user-schema#',
     constraintName: 'required',
