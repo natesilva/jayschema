@@ -19,7 +19,7 @@ describe('JSON schema self-validation test:', function() {
   });
 
   describe('validate meta-schema (asynchronously):', function() {
-    var jj = new JaySchema();
+    var jj = new JaySchema(JaySchema.loaders.http);
     it('should self-validate the JSON Schema schema', function(done) {
       jj.validate(v4Schema, {$ref: schemaUrl}, function(errs) {
         should.not.exist(errs);

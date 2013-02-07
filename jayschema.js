@@ -24,9 +24,18 @@ var schemaTestSets = {
 var JaySchema = function(loader) {
   // internal
   this.schemas = {};
-  this._urlsRequested = [];
+  this._refsRequested = [];
   this._missingSchemas = {};
   if (typeof loader === 'function') { this._loader = loader; }
+  this.maxRecursion = 5;
+};
+
+// ******************************************************************
+// [static] Pre-defined schema loaders (can be passed to the
+// constructor)
+// ******************************************************************
+JaySchema.loaders = {
+  http: require('./httpLoader.js')
 };
 
 // ******************************************************************
@@ -193,6 +202,58 @@ JaySchema._gatherRefs = function(obj) {
 };
 
 // ******************************************************************
+// Helper to call the user-provided schema loader.
+// ******************************************************************
+JaySchema.prototype._loadMissingRefs = function(depth, callback) {
+  var err;
+  var missing = Object.keys(this._missingSchemas);
+
+  // try not to request the same ref more than once
+  missing = missing.filter(function(ref) {
+    if (this.schemas.hasOwnProperty(ref)) { return false; }
+    if (this._refsRequested.indexOf(ref) !== -1) { return false; }
+    return true;
+  }, this);
+
+  if (!missing.length) { return process.nextTick(callback); }
+
+  // are we in too deep?
+  if (!depth) {
+    var desc = 'would exceed max recursion depth fetching these referenced ' +
+      'schemas: ' + missing;
+    err = new Errors.ValidationError(null, null, null, null, null,
+      desc);
+    return process.nextTick(callback.bind(null, err));
+  }
+
+  // fetch 'em
+  var completedCount = 0;
+  var totalCount = missing.length;
+  err = null;
+
+  var loaderCallback = function(ref, loaderErr, schema) {
+    if (loaderErr) { err = loaderErr; }
+    else { this.register(schema, ref); }
+
+    completedCount++;
+    if (completedCount === totalCount) {
+      if (err) {
+        callback(err);
+      } else {
+        this._loadMissingRefs(depth - 1, function(err) { callback(err); });
+      }
+    }
+  };
+
+  for (var index = 0, len = missing.length; index !== len; ++index) {
+    var ref = missing[index];
+    this._refsRequested.push(ref);
+    this._loader(ref, loaderCallback.bind(this, ref));
+  }
+
+};
+
+// ******************************************************************
 // The main validation guts (internal implementation).
 // ******************************************************************
 JaySchema.prototype._validateImpl = function(instance, schema, resolutionScope,
@@ -238,56 +299,33 @@ JaySchema.prototype.validate = function(instance, schema, callback)
   this.register(schema, schemaId);
 
   if (callback) {
+
     var self = this;
     var result;
 
-    // If the user provided a _loader callback, load all unresolved
-    // $referenced schemas at this time.
-    var missing = Object.keys(self._missingSchemas);
+    if (self._loader) {
 
-    if (this._loader && missing.length) {
-
-      // As we load schemas, additional unresolved schemas may be
-      // $referenced. Keep going until we get an error, hit a max
-      // recursion depth, or until there are no more unresolved
-      // schemas.
-
-      var maxRecursion = self.maxRecursion || 5;
-      var gotError = false;
-
-      while (!gotError && missing.length && maxRecursion > 0) {
-
-        for (var x = 0, len = missing.length; x !== len && !gotError; ++x) {
-          var ref = missing[x]; if (!self.schemas.hasOwnProperty(ref)) {
-            self._loader(ref, function(err, schema) {
-              if (err) {
-                gotError = true;
-                return callback(err);
-              }
-              self.register(schema, ref);
-            });
-          }
-        }
-
-        missing = Object.keys(self._missingSchemas);
-        maxRecursion--;
-      }
-
-      if (!gotError) {
-        result = this._validateImpl(instance, schema);
-        if (result.length) { process.nextTick(callback.bind(null, result)); }
-        else { process.nextTick(callback); }
-      }
+      // If the user provided a _loader callback, load all unresolved
+      // $references schemas at this time.
+      self._loadMissingRefs(self.maxRecursion, function(err) {
+        if (err) { return callback(err); }
+        result = self._validateImpl(instance, schema);
+        if (result.length) { callback(result); }
+        else { callback(); }
+      });
 
     } else {
-      // no _loader or no missing schemas
+      // no loader, but user still wants a callback
       result = this._validateImpl(instance, schema);
       if (result.length) { process.nextTick(callback.bind(null, result)); }
       else { process.nextTick(callback); }
     }
+
   } else {
+
     // traditional, non-callback validation
     return this._validateImpl(instance, schema);
+
   }
 };
 
