@@ -118,14 +118,24 @@ JaySchema.prototype.getSchema = function(resolvedId) {
 // ******************************************************************
 JaySchema._gatherRefs = function(obj) {
   var result = [];
-  var keys = Object.keys(obj);
-  if (obj.$ref) { result.push(obj.$ref); }
-  for (var index = 0, len = keys.length; index !== len; ++index) {
-    var key = keys[index];
-    if (typeof obj[key] === 'object') {
-      result = result.concat(JaySchema._gatherRefs(obj[key]));
+
+  var currentObj = obj;
+  var keys = Object.keys(currentObj);
+  var subObjects = [];
+
+  do {
+
+    if (currentObj.hasOwnProperty('$ref')) { result.push(currentObj.$ref); }
+
+    for (var index = 0, len = keys.length; index !== len; ++index) {
+      var prop = currentObj[keys[index]];
+      if (typeof prop === 'object') { subObjects.push(prop); }
     }
-  }
+
+    currentObj = subObjects.pop();
+
+  } while(currentObj);
+
   return result;
 };
 
