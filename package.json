@@ -24,5 +24,6 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha tests"
-  }
+  },
+  "license": "BSD-3-Clause"
 }
