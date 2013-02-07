@@ -23,7 +23,7 @@ var schemaTestSets = {
 // ******************************************************************
 var JaySchema = function(loader) {
   // internal
-  this.schemas = {};
+  this._schemas = {};
   this._refsRequested = [];
   this._missingSchemas = {};
   if (typeof loader === 'function') { this._loader = loader; }
@@ -74,15 +74,15 @@ JaySchema.prototype.register = function(schema, id, _resolutionScope, _path) {
 
     if (isFragment) {
       // fragment of a top-level schema
-      if (this.schemas.hasOwnProperty(baseUri)) {
-        if (!this.schemas[baseUri].fragments.hasOwnProperty(parts.hash)) {
-          this.schemas[baseUri].fragments[parts.hash] = _path;
+      if (this._schemas.hasOwnProperty(baseUri)) {
+        if (!this._schemas[baseUri].fragments.hasOwnProperty(parts.hash)) {
+          this._schemas[baseUri].fragments[parts.hash] = _path;
         }
       }
     } else {
       // top-level schema
-      if (!this.schemas.hasOwnProperty(baseUri)) {
-        this.schemas[baseUri] = { schema: schema, fragments: {} };
+      if (!this._schemas.hasOwnProperty(baseUri)) {
+        this._schemas[baseUri] = { schema: schema, fragments: {} };
         _path = '#';
         if (baseUri in this._missingSchemas) {
           delete this._missingSchemas[baseUri];
@@ -118,7 +118,7 @@ JaySchema.prototype.register = function(schema, id, _resolutionScope, _path) {
     var ref = refs[index];
     if (ref[0] !== '#') {
       baseUri = JaySchema._getBaseUri(ref);
-      if (!this.schemas.hasOwnProperty(baseUri)) {
+      if (!this._schemas.hasOwnProperty(baseUri)) {
         missing[baseUri] = true;
         this._missingSchemas[baseUri] = true;
       }
@@ -148,12 +148,12 @@ JaySchema.prototype.getSchema = function(resolvedId) {
   delete parts.hash;
   var baseUri = url.format(parts);
 
-  if (!this.schemas.hasOwnProperty(baseUri)) { return null; }
+  if (!this._schemas.hasOwnProperty(baseUri)) { return null; }
 
   if (!fragment || fragment === '#' || fragment === '') {
 
     // base, non-fragment URI
-    return this.schemas[baseUri].schema;
+    return this._schemas[baseUri].schema;
   } else {
 
     // It’s a fragment, and can be either a JSON pointer or a URI
@@ -161,11 +161,11 @@ JaySchema.prototype.getSchema = function(resolvedId) {
     // corresponding JSON pointer and proceed.
 
     if (fragment.slice(0, 2) !== '#/') {  // URI fragment
-      fragment = this.schemas[baseUri].fragments[fragment] || fragment;
+      fragment = this._schemas[baseUri].fragments[fragment] || fragment;
     }
 
     var path = fragment.slice(2).split('/');
-    var currentSchema = this.schemas[baseUri].schema;
+    var currentSchema = this._schemas[baseUri].schema;
     while (path.length) {
       var element = jsonPointer.decode(path.shift());
       if (!currentSchema.hasOwnProperty(element)) { return null; }
@@ -210,7 +210,7 @@ JaySchema.prototype._loadMissingRefs = function(depth, callback) {
 
   // try not to request the same ref more than once
   missing = missing.filter(function(ref) {
-    if (this.schemas.hasOwnProperty(ref)) { return false; }
+    if (this._schemas.hasOwnProperty(ref)) { return false; }
     if (this._refsRequested.indexOf(ref) !== -1) { return false; }
     return true;
   }, this);
