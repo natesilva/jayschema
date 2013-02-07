@@ -66,6 +66,15 @@ var BLACKLISTED_TESTS = {
 
   'extends.json': {
     '*': 'extends keyword removed from v4'
+  },
+
+  'jsregex.json': {
+    '*': 'optional feature not supported by this validator yet'
+  },
+
+  'zeroTerminatedFloats.json': {
+    '*': 'no longer enforced in v4'
+
   }
 
 };
