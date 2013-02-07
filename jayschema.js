@@ -120,13 +120,13 @@ JaySchema._gatherRefs = function(obj) {
   var result = [];
 
   var currentObj = obj;
-  var keys = Object.keys(currentObj);
   var subObjects = [];
 
   do {
 
     if (currentObj.hasOwnProperty('$ref')) { result.push(currentObj.$ref); }
 
+    var keys = Object.keys(currentObj);
     for (var index = 0, len = keys.length; index !== len; ++index) {
       var prop = currentObj[keys[index]];
       if (typeof prop === 'object') { subObjects.push(prop); }
