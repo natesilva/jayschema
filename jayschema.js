@@ -6,7 +6,6 @@
 
 var jsonPointer = require('./jsonPointer.js')
   , url = require('url')
-  , downloadSchema = require('./downloadSchema.js')
   , Errors = require('./errors.js')
   , uuid = require('./uuid.js')
   ;
@@ -22,12 +21,11 @@ var schemaTestSets = {
 // ******************************************************************
 // Constructor
 // ******************************************************************
-var JaySchema = function(maxPreload) {
+var JaySchema = function() {
   // internal
   this.schemas = {};
   this._urlsRequested = [];
   this._missingSchemas = {};
-  this._maxPreload = maxPreload || 5;
 };
 
 // ******************************************************************
@@ -194,65 +192,6 @@ JaySchema._gatherRefs = function(obj) {
 };
 
 // ******************************************************************
-// Recursively and asynchronously pre-load all schemas that are
-// referenced ('$ref') from the given schema.
-//
-// Recurses to the given depth: if a schema references an external
-// schema, it will be fetched. If THAT schema references an external
-// schema, it will be fetched etc. Once this reaches the specified
-// depth, an error will be returned.
-// ******************************************************************
-JaySchema.prototype._recursivePreload = function(schema, depth, callback) {
-  var self = this;
-  var errs = [];
-  var index, len, ref;
-
-  var refs = JaySchema._gatherRefs(schema);
-
-  refs = refs.filter(function(ref) {
-    if (this.schemas.hasOwnProperty(ref)) { return false; }
-    if (this._urlsRequested.indexOf(ref) !== -1) { return false; }
-    var parts = url.parse(ref);
-    if (!parts.protocol || parts.protocol.slice(0, 4) !== 'http') {
-      return false;
-    }
-    return true;
-  }, this);
-
-  // nothing to fetch?
-  if (refs.length === 0) { return process.nextTick(callback); }
-
-  // are we in too deep?
-  if (!depth) {
-    var desc = 'would exceed max recursion depth fetching these referenced ' +
-      'schemas: ' + refs;
-    var err = new Errors.ValidationError(null, null, null, null, null,
-      desc);
-    return process.nextTick(callback.bind(null, err));
-  }
-
-  // fetch 'em
-  var completedCount = 0;
-  var totalCount = refs.length;
-
-  for (index = 0, len = refs.length; index !== len; ++index) {
-    ref = refs[index];
-    this._urlsRequested.push(ref);
-    downloadSchema(ref, function(err, schema) {
-      if (err) { return errs.push(err); }
-      self.register(schema, ref);
-      self._recursivePreload(schema, depth - 1, function(moreErrs) {
-        if (moreErrs) { errs = errs.concat(moreErrs); }
-        completedCount++;
-        if (completedCount === totalCount) {
-          callback(errs);
-        }
-      });
-    });
-  }
-};
-
-// ******************************************************************
 // The main validation guts (internal implementation).
 // ******************************************************************
 JaySchema.prototype._validateImpl = function(instance, schema, resolutionScope,
@@ -272,8 +211,8 @@ JaySchema.prototype._validateImpl = function(instance, schema, resolutionScope,
     if (!schema) {
       var desc = 'schema not available: ' + ref;
       if (ref.slice(0, 4) === 'http') {
-        desc += ' [schemas can be retrieved over HTTP, but only if ' +
-          'validate() is called asynchronously]';
+        desc += ' [on-demand loading of schemas is not supported at the ' +
+          'moment; support will return soon using an improved mechanism]';
       }
       var err = new Errors.ValidationError(null, null, null, null, null,
         desc);
@@ -301,16 +240,10 @@ JaySchema.prototype.validate = function(instance, schema, callback)
   var schemaId = schema.id || ANON_URI_SCHEME + '://' + uuid.uuid4() + '#';
   this.register(schema, schemaId);
 
-  // preload referenced schemas (recursively)
   if (callback) {
-    var self = this;
-    self._recursivePreload(schema, this._maxPreload, function(errs) {
-      // no further disk or net I/O from here on
-      if (errs && errs.length !== 0) { return callback(errs); }
-      var result = self._validateImpl(instance, schema);
-      if (result.length) { callback(result); }
-      else { callback(); }
-    });
+    var result = this._validateImpl(instance, schema);
+    if (result.length) { process.nextTick(callback.bind(null, result)); }
+    else { process.nextTick(callback); }
   } else {
     return this._validateImpl(instance, schema);
   }
