@@ -57,6 +57,12 @@ var ObjectValidationError = function() {
 };
 util.inherits(ObjectValidationError, ValidationError);
 
+var LoaderError = function() {
+  ValidationError.apply(this, arguments);
+  this.kind = 'LoaderError';
+};
+util.inherits(ObjectValidationError, ValidationError);
+
 // ******************************************************************
 // Exports
 // ******************************************************************
@@ -66,3 +72,4 @@ exports.NumericValidationError = NumericValidationError;
 exports.StringValidationError = StringValidationError;
 exports.ArrayValidationError = ArrayValidationError;
 exports.ObjectValidationError = ObjectValidationError;
+exports.LoaderError = LoaderError;

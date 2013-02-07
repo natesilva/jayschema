@@ -324,8 +324,19 @@ JaySchema.prototype.validate = function(instance, schema, callback)
   } else {
 
     // traditional, non-callback validation
-    return this._validateImpl(instance, schema);
+    var errs = [];
 
+    if (this._loader) {
+      var desc = 'You provided a loader callback, but you are calling ' +
+        'validate() synchronously. Your loader will be ignored and ' +
+        'validation will fail if any missing $refs are encountered.';
+      var err = new Errors.LoaderError(null, null, null, null, null,
+        desc);
+      errs.push(err);
+    }
+
+    errs = errs.concat(this._validateImpl(instance, schema));
+    return errs;
   }
 };
 
