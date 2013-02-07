@@ -121,7 +121,17 @@ function getTests(dir) {
 
 describe('JSON Schema Test Suite:', function() {
 
-  var files = getTests(path.join(__dirname, 'JSON-Schema-Test-Suite'));
+  var testPath = path.join(__dirname, 'JSON-Schema-Test-Suite', 'tests',
+    'draft3');
+
+  if (!fs.existsSync(testPath)) {
+    var message = 'Skipping JSON-Schema-Test-Suite tests. To run these, ' +
+      'please do `git submodule init` and `git submodule update` before ' +
+      'running the tests.';
+    throw new Error(message);
+  }
+
+  var files = getTests(testPath);
 
   for (var index = 0, len = files.length; index !== len; ++index) {
     var jsonFile = files[index];
