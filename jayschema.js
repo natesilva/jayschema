@@ -23,57 +23,111 @@ var schemaTestSets = {
 // Constructor
 // ******************************************************************
 var JaySchema = function(maxPreload) {
+  // internal
   this.schemas = {};
   this._urlsRequested = [];
-  this.maxPreload = maxPreload || 5;
+  this._missingSchemas = {};
+  this._maxPreload = maxPreload || 5;
 };
 
 // ******************************************************************
-// Register the given schema in our library of schemas.
+// Get an array of $refs for which we don’t have a schema yet.
 // ******************************************************************
-JaySchema.prototype.register = function(schema, resolutionScope, _fallbackId,
-  _path)
-{
+JaySchema.prototype.getMissingSchemas = function() {
+  return Object.keys(this._missingSchemas);
+};
+
+// ******************************************************************
+// Register the given schema in our library of schemas. Returns a
+// list of $ref-erenced schemas which are not currently registered.
+// ******************************************************************
+JaySchema.prototype.register = function(schema, id, _resolutionScope, _path) {
+  var index, len, baseUri;
+
+  if (typeof schema !== 'object' || Array.isArray(schema)) { return []; }
+
   // We stash each schema that has a unique URI, not including
   // the fragment part.
 
-  var id = schema.id || _fallbackId;
-  if (id) {
-    var resolvedId = jsonPointer.resolve(resolutionScope, id);
-    resolutionScope = resolvedId;
-    var parts = url.parse(resolvedId);
-    var fragment = parts.hash;
-    delete parts.hash;
-    var baseUri = url.format(parts);
+  id = schema.id || id;
+  _resolutionScope = _resolutionScope || id;
 
-    if (!fragment || fragment === '#' || fragment === '') {
-      // top-level schema
+  if (id) {
+
+    // Only schemas with an id are stashed. Without an id there’d be
+    // no way to reference it from another schema.
+
+    var resolvedId = jsonPointer.resolve(_resolutionScope, id);
+    _resolutionScope = resolvedId;
+
+    var parts = url.parse(resolvedId);
+    var isFragment = !(!parts.hash || parts.hash === '#' || parts.hash === '');
+    baseUri = JaySchema._getBaseUri(resolvedId);
+
+    if (isFragment) {
+      // fragment of a top-level schema
       if (this.schemas.hasOwnProperty(baseUri)) {
-        // this and its sub-schemas are already registered
-        return;
+        if (!this.schemas[baseUri].fragments.hasOwnProperty(parts.hash)) {
+          this.schemas[baseUri].fragments[parts.hash] = _path;
+        }
       }
-      this.schemas[baseUri] = { schema: schema, fragments: {} };
-      _path = '#';
     } else {
-      // fragment reference within a top-level schema
-      if (this.schemas.hasOwnProperty(baseUri)) {
-        if (!this.schemas[baseUri].fragments.hasOwnProperty(fragment)) {
-          this.schemas[baseUri].fragments[fragment] = _path;
+      // top-level schema
+      if (!this.schemas.hasOwnProperty(baseUri)) {
+        this.schemas[baseUri] = { schema: schema, fragments: {} };
+        _path = '#';
+        if (baseUri in this._missingSchemas) {
+          delete this._missingSchemas[baseUri];
         }
       }
     }
+
   }
+
+  var refs = [];
+  if (schema.hasOwnProperty('$ref')) { refs.push(schema.$ref); }
 
   // register sub-schemas
   var keys = Object.keys(schema);
-  for (var index = 0, len = keys.length; index !== len; ++index) {
+  for (index = 0, len = keys.length; index !== len; ++index) {
     var key = keys[index];
     if (typeof schema[key] === 'object') {
-      if (!Array.isArray(schema[key])) {
-        this.register(schema[key], resolutionScope, null, _path + '/' + key);
+      if (Array.isArray(schema[key])) {
+        for (var y = 0, yLen = schema[key].length; y !== yLen; ++y) {
+          refs = refs.concat(this.register(schema[key][y], null,
+            _resolutionScope, _path + '/' + key + '/' + y));
+        }
+      } else {
+        refs = refs.concat(this.register(schema[key], null, _resolutionScope,
+          _path + '/' + key));
       }
     }
   }
+
+  // determine which refs are missing
+  var missing = {};
+  for (index = 0, len = refs.length; index !== len; ++index) {
+    var ref = refs[index];
+    if (ref[0] !== '#') {
+      baseUri = JaySchema._getBaseUri(ref);
+      if (!this.schemas.hasOwnProperty(baseUri)) {
+        missing[baseUri] = true;
+        this._missingSchemas[baseUri] = true;
+      }
+    }
+  }
+
+  return Object.keys(missing);
+};
+
+// ******************************************************************
+// [static] Given a schema’s id, returns the base URI name, removing
+// any fragment sections.
+// ******************************************************************
+JaySchema._getBaseUri = function(id) {
+  var parts = url.parse(id);
+  delete parts.hash;
+  return url.format(parts);
 };
 
 // ******************************************************************
@@ -186,7 +240,7 @@ JaySchema.prototype._recursivePreload = function(schema, depth, callback) {
     this._urlsRequested.push(ref);
     downloadSchema(ref, function(err, schema) {
       if (err) { return errs.push(err); }
-      self.register(schema, ref, ref);
+      self.register(schema, ref);
       self._recursivePreload(schema, depth - 1, function(moreErrs) {
         if (moreErrs) { errs = errs.concat(moreErrs); }
         completedCount++;
@@ -206,7 +260,7 @@ JaySchema.prototype._validateImpl = function(instance, schema, resolutionScope,
 {
   // for schemas that have no id, use an internal anonymous id
   var schemaId = schema.id || ANON_URI_SCHEME + '://' + uuid.uuid4() + '#';
-  this.register(schema, resolutionScope, schemaId);
+  this.register(schema, schemaId, resolutionScope);
   resolutionScope = resolutionScope || schemaId;
 
   // dereference schema if needed
@@ -245,12 +299,12 @@ JaySchema.prototype.validate = function(instance, schema, callback)
 {
   // for schemas that have no id, use an internal anonymous id
   var schemaId = schema.id || ANON_URI_SCHEME + '://' + uuid.uuid4() + '#';
-  this.register(schema, null, schemaId);
+  this.register(schema, schemaId);
 
   // preload referenced schemas (recursively)
   if (callback) {
     var self = this;
-    self._recursivePreload(schema, this.maxPreload, function(errs) {
+    self._recursivePreload(schema, this._maxPreload, function(errs) {
       // no further disk or net I/O from here on
       if (errs && errs.length !== 0) { return callback(errs); }
       var result = self._validateImpl(instance, schema);
