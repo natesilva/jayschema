@@ -220,7 +220,8 @@ JaySchema.prototype._loadMissingRefs = function(depth, callback) {
   // are we in too deep?
   if (!depth) {
     var desc = 'would exceed max recursion depth fetching these referenced ' +
-      'schemas: ' + missing;
+      'schemas (set the maxRecursion property if you need to go deeper): ' +
+      missing;
     err = new Errors.ValidationError(null, null, null, null, null,
       desc);
     return process.nextTick(callback.bind(null, err));
