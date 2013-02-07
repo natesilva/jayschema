@@ -4,7 +4,7 @@
 
 
 var assert = require('assert')
-  , downloadSchema = require('../downloadSchema.js')
+  , httpLoader = require('../httpLoader.js')
   ;
 
 describe('GET request wrapper:',
@@ -14,7 +14,7 @@ describe('GET request wrapper:',
 
     it('should retrieve the schema', function(done) {
       var url = 'http://json-schema.org/draft-04/schema#';
-      downloadSchema(url, function(err, schema) {
+      httpLoader(url, function(err, schema) {
         if (err) { throw err; }
         assert.equal(url, schema.id);
         done();
@@ -23,7 +23,7 @@ describe('GET request wrapper:',
 
     it('should fail to retrieve the URL', function(done) {
       var url = 'http://google.com/404';
-      downloadSchema(url, function(err, json) {
+      httpLoader(url, function(err, json) {
         assert(err);
         done();
       });
@@ -31,7 +31,7 @@ describe('GET request wrapper:',
 
     it('should fail to get a schema', function(done) {
       var url = 'http://google.com/';
-      downloadSchema(url, function(err, json) {
+      httpLoader(url, function(err, json) {
         assert(err);
         done();
       });
