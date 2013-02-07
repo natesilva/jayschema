@@ -1,156 +1,121 @@
 # JaySchema: JavaScript JSON Schema Validator
 
-## A comprehensive validator for Node.js
+## Complete and convenient validator for Node.js
 
-**JaySchema** is a validator for testing JSON objects against a [**JSON Schema Draft v4**](http://json-schema.org/documentation.html) schema.
+Use **JaySchema** to validate JSON objects using [**JSON Schema Draft v4**](http://json-schema.org/documentation.html). This is a pre-release version: the API is subject to change.
 
-This is the first release and should be considered alpha-quality code.
-
-## What it is
-
-Have you ever wanted to validate JSON data server-side?
-
-Maybe you have a JSON-based API and you need to make sure incoming values are valid. Or perhaps you’re using a database that returns JSON documents, like many of today’s NoSQL databases, and you want to put strong constraints on incoming data.
-
-You can use an [ORM](https://npmjs.org/browse/keyword/orm) to do this, but that solution is overkill if you only need validation. It also ties you to a single database backend. If you want to change databases, you’re stuck. You may even want to use multiple databases simultaneously—for example, session data in Redis and permanent data in MongoDB—and you want to validate both.
-
-With **JaySchema** you create a rich JSON Schema describing your documents and then validate documents against it. You control the validation. It’s not tied to any database or backend. You get to use the really nice JSON Schema syntax (see the [official examples](http://json-schema.org/examples.html)), you get useful error messages, and it can even do some types of validation that aren’t supported by popular ORMs.
-
-## Features
-
-* **Comprehensive:** Covers all of the spec except the optional `format` property.
-* **Tested:**
-	* Passes all tests from the official [JSON Schema Test Suite](https://github.com/json-schema/JSON-Schema-Test-Suite) except those which are not applicable to Draft v4. (The Test Suite was designed with v3 in mind. When v4 tests are available, **JaySchema** will be tested against them.)
-	* Passes hundreds of other unit tests, most written to test very specific aspects of the draft spec.
-* **Friendly:** Error messages that tell you:
-	* The exact location in your document where validation failed.
-	* The exact location in the schema of the rule that caused validation failure.
-	* If applicable, the value that was expected and the value that was seen in the document.
-* **Handles `$ref`s correctly.** In JSON Schema, the `$ref` keyword is a powerful way to reference *other* schemas, public or private, and incorporate them into your schema.
-	* `$ref`s to external documents are resolved and, optionally, downloaded.
-	* Internal `$ref`s are resolved, whether using a URI fragment or [JSON Pointer](http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-07) syntax.
-
-## Compatibility
-
-**JaySchema** is compatible with [**JSON Schema Draft v4**](http://json-schema.org/documentation.html). It will __not__ validate most Draft v3 or earlier schemas.
-
-## Installation
+## Install
 
     npm install jayschema
 
 ## Usage
 
+### Basic usage
+
 ```js
-// synchronous
 var JaySchema = require('jayschema');
-var schema = { … };
-var doc = { … };
-var jj = new JaySchema();
-var errors = jj.validate(doc, schema);
-if (errors.length) { console.error(errors); }
-else { console.log('document validates!'); }
-```
-```js
-// async
-var JaySchema = require('jayschema');
-var schema = { … };
-var doc = { … };
-var jj = new JaySchema();
-jj.validate(doc, schema, function(errors) {
-	if (errors.length) { console.error(errors); }
-	else { console.log('document validates!'); }
+var js = new JaySchema();
+var instance = 64;
+var schema = { "type": "integer", "multipleOf": 8 };
+
+// synchronous…
+console.log('synchronous result:', js.validate(instance, schema));
+
+// …or async
+js.validate(instance, schema, function(errs) {
+    if (errs) { console.error(errs); }
+    else { console.log('async validation OK!'); }
 });
 ```
+### Using the optional HTTP loader (or load from your database)
 
-## Error message example
-
-Here’s a simple validation showing how error messages work:
+Here a referenced schema is loaded using the built-in HTTP loader. You can also supply your own loader—for example, if you want to load schemas from a database.
 
 ```js
+var JaySchema = require('jayschema');
+var js = new JaySchema(JaySchema.loaders.http);     // we provide the HTTP loader here
+
+var instance = { "location": { "latitude": 0, "longitude": 0 } };
 var schema = {
-    "title": "Example Schema",
-    "id": "http://some.site.somewhere/user-schema#",
     "type": "object",
-    "required": ["firstName", "lastName"],
     "properties": {
-        "firstName": {
-            "type": "string"
-        },
-        "lastName": {
-            "type": "string"
-        },
-        "age": {
-            "description": "Age in years",
-            "type": "integer",
-            "minimum": 0
-        }
+        "location": { "$ref": "http://json-schema.org/geo" }
     }
 };
 
-var doc = {
-    "firstName": "Bob",
-    "age": 22
-};
-
-var jj = new JaySchema();
-console.log(jj.validate(doc, schema));
+js.validate(instance, schema, function(errs) {
+  if (errs) { console.error(errs); }
+  else { console.log('validation OK!'); }
+});
 ```
 
-The result looks like this:
+## Features
 
-```js
-[ { instanceContext: '#',
-    resolutionScope: 'http://some.site.somewhere/user-schema#',
-    constraintName: 'required',
-    constraintValue: [ 'firstName', 'lastName' ],
-    desc: 'missing: lastName',
-    kind: 'ObjectValidationError' } ]
-```
+* **Complete:** Covers all of the spec, except the optional `format` property. Hundreds of unit tests.
+* **Excellent handling of $refs:** Properly handles all `$ref`s, internal and external.
+* **Load $refs your way:** Ever want to load schemas from a database? With **JaySchema** you can provide a user-defined loader. When **JaySchema** encounters an external `$ref`, your loader will be called.
+* **Helpful:** Error messages tell you:
+	* The exact location in your document where validation failed.
+	* The exact location in the schema of the rule that caused validation failure.
+	* If applicable, the value that was expected and the value that was seen in the document.
 
-This tells us where the validation failed (`instanceContext`). In this case, it failed at the root level of our document, which is `#` in JSON Pointer syntax.
+## Why JSON Schema
 
-It also tells us what rule in the schema triggered the failure. The rule that triggered the failure was the constraint called `required`. We can see that the value of `required` is `[ 'firstName', 'lastName' ]`.
+Have you ever wanted to validate JSON data server-side?
 
-The `desc` property gives us more information about the failure. In this case, it tells us that the `lastName` field was missing.
+Maybe you have a JSON-based API, or are using a NoSQL database that stores JSON documents.
 
-There’s one other field of interest, the `resolutionScope`. This contains the `id` of the schema. If the schema had no `id` property (an *anonymous schema*), you would see an auto-generated `id` here.
+You can use an [ORM](https://npmjs.org/browse/keyword/orm) fort this, but that’s overkill if you only need validation. And ORMs are often tied to a single database backend. What if you store session data in Redis and permanent data in MongoDB?
 
-## Unit tests
-
-The author would appreciate reports of unit test failures. Use the Github “Issues” feature to report this. To run the unit tests:
-
-* `git clone` the repo.
-* Ensure you have [Mocha](http://visionmedia.github.com/mocha/) installed.
-* From the repo top directory, run `npm install` to install dev-time dependencies.
-* From the repo top directory, run `mocha tests`.
-
-Note that some tests will appear as a yellow dot, indicating they are slow. This is normal for a few tests that do network I/O and does not need to be reported.
+With **JaySchema** you create a rich JSON Schema describing your documents and then validate documents against it. You control the validation. It’s not tied to any database or backend. You get to use the really nice JSON Schema syntax (see the [official examples](http://json-schema.org/examples.html)), you get useful error messages, and it can even do some types of validation that aren’t supported by popular ORMs.
 
 ## API
 
-### JaySchema([maxPreload])
+### JaySchema([*loader*])
 
-**(Constructor)** The `maxPreload` option, if specified, is the maximum depth to recurse when retrieving `$ref` schemas over HTTP. The default is `5`.
+**(Constructor)** The optional `loader` will be called each time an external `$ref` is encountered. It should load the referenced schema and return it.
 
-### JaySchema.prototype.validate(instance, schema [, callback])
+If you don’t reference any external schemas, you don’t need to provide a *loader*.
+
+**If you provide a *loader*, you should call the validate() function asynchronously.** That’s because loading involves disk or network I/O, and I/O operations in Node are asynchronous.
+
+Sample loader skeleton:
+
+```js
+function loader(ref, callback) {
+    // ref is the schema to load
+    // [ load your schema! ]
+    if (errorOccurred) {
+        callback(err);
+    } else {      
+        callback(null, schema);
+    }
+}
+```
+
+### JaySchema.prototype.validate(*instance*, *schema* [, *callback*])
+
+Validate a JSON object, *instance*, against the given *schema*. If you provide a *callback*, validation will be done asynchronously.
 
 #### Return value
 
-* **In synchronous mode:** An array of errors. Success is indicated by an empty array.
-* **In async mode:** Returns the standard Node callback signature. The first argument will be an array of errors, if any errors occurred, or `undefined` on success.
+* **async:** Uses the standard Node callback signature. The first argument will be an array of errors, if any errors occurred, or `undefined` on success.
+* **synchronous:** If you don’t provide a callback, an array of errors will be returned. Success is indicated by an empty array.
 
-#### Synchronous usage
+### JaySchema.prototype.register(*schema* [, *id*])
 
-If `callback` is not provided, the validation will be done synchronously.
+Manually register *schema*. Useful if you have several related schemas you are working with. The optional *id* can be used to register a schema that doesn’t have an `id` property, or which is referenced using a unique id.
 
-In synchronous mode, if your schema references an external schema (an HTTP URI) using the `$ref` keyword, validation will fail. This is because retrieving a remote resource over HTTP requires asynchronous operation in Node.js.
+### Loaders
 
-If your schema is self contained (or if all external schemas have been registered using the `register` method), you can call `validate` synchronously.
+While you can define your own loader to pass to the constructor, JaySchema includes one built-in loader for your convenience.
 
-#### Asynchronous usage
+#### JaySchema.loaders.http
 
-In asynchronous mode, external schema references (those with an HTTP URI) will be retrieved automatically (a process called *preloading*). In addition, any external schema references within *those* schemas will be retrieved, etc. To prevent infinite recursion, a `maxPreload` option can be passed to the constructor (default: `5`). This is the maximum depth of schema referrals to allow.
+Loads external `$ref`s using HTTP. **Caveat:** HTTP is inherently unreliable. For example, the network or site may be down, or the referenced schema may not be available any more. You really shouldn’t use this in production, but it’s great for testing.
 
-### JaySchema.prototype.register(schema [, resolutionScope])
+### Configuration options
 
-Manually register a schema. Useful if you have several related schemas you are working with. The optional `resolutionScope` can be used to register a schema that doesn’t have an `id` property, or which is referenced using a unique resolution scope.
+### maxRecursion
+
+The maximum depth to recurse when retrieving external `$ref` schemas using a loader. The default is `5`.
