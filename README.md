@@ -2,7 +2,7 @@
 
 ## Complete and convenient validator for Node.js
 
-Use **JaySchema** to validate JSON objects using [**JSON Schema Draft v4**](http://json-schema.org/documentation.html). This is a pre-release (beta) version.
+Use **JaySchema** to validate JSON objects using [**JSON Schema Draft v4**](https://json-schema.org/documentation.html). This is a pre-release (beta) version.
 
 ## Install
 
