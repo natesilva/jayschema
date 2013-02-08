@@ -51,7 +51,7 @@ js.validate(instance, schema, function(errs) {
 
 ## Features
 
-* **Complete:** Covers all of the spec, except the optional `format` property. Hundreds of unit tests.
+* **Complete:** Covers all of the spec. Hundreds of unit tests.
 * **Excellent handling of $refs:** Properly handles all `$ref`s, internal and external.
 * **Load $refs your way:** Ever want to load schemas from a database? With **JaySchema** you can provide a user-defined loader. When **JaySchema** encounters an external `$ref`, your loader will be called.
 * **Helpful:** Error messages tell you:
@@ -160,3 +160,14 @@ Each time you call `register(schema)`, the return value will be an array of miss
 Calling `register(schemaA);` will (1) register `schemaA` and (2) return a list of missing schemas that were referenced by `schemaA`.
 
 If, instead, you want the list of *all* missing schemas referenced by all registrations that have been done so far, use the `getMissingSchemas()` method, above.
+
+## Format specifiers
+
+**JaySchema** supports the following values for the optional `format` keyword:
+
+* `date-time`: Must match the `date-time` specification given in [RFC 3339, Section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6).
+* `hostname`: Must match the “Preferred name syntax” given in [RFC 1034, Section 3.5](https://tools.ietf.org/html/rfc1034#section-3.5), with the exception that hostnames are permitted to begin with a digit, as per [RFC 1123 Section 2.1](http://tools.ietf.org/html/rfc1123#section-2.1).
+* `email`: Must match [RFC 5322, Section 3.4.1](https://tools.ietf.org/html/rfc5322#section-3.4.1), with the following limitations: `quoted-string`s, `domain-literal`s, comments, and folding whitespace are not supported; the `domain` portion must be a hostname as in the `hostname` keyword.
+* `ipv4`: Must be a dotted-quad IPv4 address.
+* `ipv6`: Must be a valid IPv6 address as per [RFC 2373 section 2.2](http://tools.ietf.org/html/rfc2373#section-2.2).
+* `uri`: As in [RFC 3986 Appendix A](http://tools.ietf.org/html/rfc3986#appendix-A), with the exception that well-formedness of internal elements, including percent encoding and authority strings, is not verified.

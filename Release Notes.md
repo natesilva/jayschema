@@ -1,3 +1,8 @@
+# 0.1.0-beta
+
+* Updated version number to 0.1.0-beta, as 0.1.0 is the likely version number of the first non-beta release.
+* :new: — Support for the `format` keyword. All formats defined in the spec are supported: `date-time`, `email`, `hostname`, `ipv4`, `ipv6` and `uri`.
+
 # 0.0.1-beta
 
 * :exclamation: — **[breaking change]** The `validate()` method no longer auto-downloads schemas from HTTP. If you rely on this functionality, the following code is equivalent:
