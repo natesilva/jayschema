@@ -2,7 +2,7 @@
 
 ## Complete and convenient validator for Node.js
 
-Use **JaySchema** to validate JSON objects using [**JSON Schema Draft v4**](https://json-schema.org/documentation.html). This is a pre-release (beta) version.
+Use **JaySchema** to validate JSON objects using [**JSON Schema Draft v4**](http://json-schema.org/documentation.html). This is a pre-release (beta) version.
 
 ## Install
 
@@ -51,7 +51,7 @@ js.validate(instance, schema, function(errs) {
 
 ## Features
 
-* **Complete:** Covers all of the spec. Hundreds of our own unit tests, plus all relevant tests from [JSON-Schema-Test-Suite](http://github.com/json-schema/JSON-Schema-Test-Suite).
+* **Complete:** Covers all of the spec. Hundreds of our own unit tests, plus all relevant tests from [JSON-Schema-Test-Suite](https://github.com/json-schema/JSON-Schema-Test-Suite).
 * **Excellent handling of $refs:** Properly handles all `$ref`s, internal and external.
 * **Load $refs your way:** Ever want to load schemas from a database? With **JaySchema** you can provide a user-defined loader. When **JaySchema** encounters an external `$ref`, your loader will be called.
 * **Helpful:** Error messages tell you:
