@@ -107,5 +107,60 @@
                 "valid": false
             }
         ]
+    },
+
+    {
+        "description": "email",
+        "schema": {
+            "type": "string",
+            "format": "email"
+        },
+        "tests": [
+            {
+                "description": "matches schema",
+                "data": "first.last@example.com",
+                "valid": true
+            },
+            {
+                "description": "matches schema with single-part domain",
+                "data": "root@localhost",
+                "valid": true
+            },
+            {
+                "description": "matches schema with Gmail-style + address",
+                "data": "first.last+nospam@example.com",
+                "valid": true
+            },
+            {
+                "description": "matches schema (mixed case)",
+                "data": "UsEr@ExAmPlE.CoM",
+                "valid": true
+            },
+            {
+                "description": "matches schema (unusual but valid characters)",
+                "data": "!#$%&'*+=/?^_`{|}~-@example.com",
+                "valid": true
+            },
+            {
+                "description": "does not match schema (no domain part)",
+                "data": "user",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (missing local part)",
+                "data": "@gmail.com",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (missing domain part)",
+                "data": "user@",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (double @)",
+                "data": "user@domain.com@example.com",
+                "valid": false
+            }
+        ]
     }
 ]
