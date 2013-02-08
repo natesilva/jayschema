@@ -197,5 +197,111 @@
                 "valid": false
             }
         ]
+    },
+
+    {
+        "description": "format ipv6",
+        "schema": {
+            "type": "string",
+            "format": "ipv6"
+        },
+        "tests": [
+            {
+                "description": "matches schema (form 1 test 1)",
+                "data": "FEDC:BA98:7654:3210:FEDC:BA98:7654:3210",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 1 test 2)",
+                "data": "1080:0:0:0:8:800:200C:417A",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 1 test 3)",
+                "data": "fedc:ba98:7654:3210:fedc:ba98:7654:3210",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 2 test 1)",
+                "data": "1080::8:800:200C:417A",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 2 test 2)",
+                "data": "FF01::101",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 2 test 3)",
+                "data": "::1",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 2 test 4)",
+                "data": "::",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 3 test 1)",
+                "data": "0:0:0:0:0:0:13.1.68.3",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 3 test 2)",
+                "data": "0:0:0:0:0:FFFF:129.144.52.38",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 3 test 3)",
+                "data": "::13.1.68.3",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 3 test 4)",
+                "data": "::FFFF:129.144.52.38",
+                "valid": true
+            },
+            {
+                "description": "matches schema (form 3 test 5)",
+                "data": "FEED:BEEF::FFFF:129.144.52.38",
+                "valid": true
+            },
+            {
+                "description": "does not match schema (too many elements)",
+                "data": "FEDC:BA98:7654:3210:FEDC:BA98:7654:3210:BEEF",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (too few elements)",
+                "data": "FEDC:BA98:7654:3210:FEDC:BA98",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (non-hex element)",
+                "data": "FEDC:BA98:7654:3210:FEDC:BA98:7654:FOOL",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (double colon too many elements)",
+                "data": "FEDC:BA98:7654:3210:FEDC:BA98:7654::3210",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (invalid IPv4 part)",
+                "data": "0:0:0:0:0:0:13.1.68.300",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (misplaced IPv4 part)",
+                "data": "0:0:0:0:0:13.1.68.3:0",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (too long with IPv4 part)",
+                "data": "0:0:0:0:0:0:0:13.1.68.3",
+                "valid": false
+            }
+        ]
     }
+
 ]
