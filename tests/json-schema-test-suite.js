@@ -69,7 +69,7 @@ var BLACKLISTED_TESTS = {
   },
 
   'jsregex.json': {
-    '*': 'optional feature not supported by this validator yet'
+    '*': 'feature not in v4 (use the "pattern" keyword instead)'
   },
 
   'zeroTerminatedFloats.json': {
