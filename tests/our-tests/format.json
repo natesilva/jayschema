@@ -302,6 +302,66 @@
                 "valid": false
             }
         ]
+    },
+
+    {
+        "description": "format uri",
+        "schema": {
+            "type": "string",
+            "format": "uri"
+        },
+        "tests": [
+            {
+                "description": "matches schema",
+                "data": "http://www.google.com/",
+                "valid": true
+            },
+            {
+                "description": "matches schema (mixed case)",
+                "data": "HtTp://WwW.GoOgLe.CoM/",
+                "valid": true
+            },
+            {
+                "description": "matches schema (IPv4 literal)",
+                "data": "http://10.11.12.13/foo/bar",
+                "valid": true
+            },
+            {
+                "description": "matches schema (IPv6 literal)",
+                "data": "http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:80/index.html",
+                "valid": true
+            },
+            {
+                "description": "matches schema (ISBN URN)",
+                "data": "urn:isbn:0-486-27557-4",
+                "valid": true
+            },
+            {
+                "description": "matches schema (authority)",
+                "data": "ftp://user:pass@host/some/file",
+                "valid": true
+            },
+            {
+                "description": "matches schema (query and fragment)",
+                "data": "https://example.com/foo?q=abc%7E#frag",
+                "valid": true
+            },
+            {
+                "description": "matches schema (file path)",
+                "data": "file:///etc/passwd",
+                "valid": true
+            },
+            {
+                "description": "matches schema (unusual but valid scheme)",
+                "data": "weird-scheme-:is-weird",
+                "valid": true
+            },
+            {
+                "description": "does not match schema (invalid scheme)",
+                "data": "-minus://my/doc",
+                "valid": false
+            }
+        ]
     }
 
 ]
