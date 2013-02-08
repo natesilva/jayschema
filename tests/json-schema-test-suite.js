@@ -20,7 +20,7 @@ var should = require('should')
 var BLACKLISTED_TESTS = {
 
   'format.json': {
-    '*': 'optional feature not supported by this validator yet'
+    '*': '"format": "regex" not in v4 (use the "pattern" keyword instead)'
   },
 
   'dependencies.json': {
