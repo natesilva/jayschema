@@ -2,7 +2,7 @@
 
 ## Complete and convenient validator for Node.js
 
-Use **JaySchema** to validate JSON objects using [**JSON Schema Draft v4**](http://json-schema.org/documentation.html). This is a pre-release version: the API is subject to change.
+Use **JaySchema** to validate JSON objects using [**JSON Schema Draft v4**](http://json-schema.org/documentation.html). This is a pre-release (beta) version.
 
 ## Install
 
@@ -35,7 +35,7 @@ Here a referenced schema is loaded using the built-in HTTP loader. You can also 
 var JaySchema = require('jayschema');
 var js = new JaySchema(JaySchema.loaders.http);     // we provide the HTTP loader here
 
-var instance = { "location": { "latitude": 0, "longitude": 0 } };
+var instance = { "location": { "latitude": 48.8583, "longitude": 2.2945 } };
 var schema = {
     "type": "object",
     "properties": {
@@ -104,6 +104,16 @@ Validate a JSON object, *instance*, against the given *schema*. If you provide a
 
 Manually register *schema*. Useful if you have several related schemas you are working with. The optional *id* can be used to register a schema that doesn’t have an `id` property, or which is referenced using a unique id.
 
+**Returns:** an array of missing schemas. A missing schema is one that was `$ref`erenced by the registered schema, but hasn’t been regisetered yet. If no missing schemas were referenced, an empty array is returned.
+
+See “Schema Loading”.
+
+### JaySchema.prototype.getMissingSchemas()
+
+Returns an array of missing schemas. A missing schema is one that was `$ref`erenced by a `register()`ed schema, but the referenced schema has not yet been loaded.
+
+See “Schema Loading”.
+
 ### Loaders
 
 While you can define your own loader to pass to the constructor, JaySchema includes one built-in loader for your convenience.
@@ -117,3 +127,36 @@ Loads external `$ref`s using HTTP. **Caveat:** HTTP is inherently unreliable. Fo
 ### maxRecursion
 
 The maximum depth to recurse when retrieving external `$ref` schemas using a loader. The default is `5`.
+
+## Schema loading
+
+**JaySchema** provides a number of ways to load externally-referenced schemas.
+
+In JSON Schema, you use the `$ref` keyword to pull in an external schema. For example, you might reference a schema that is available in a local database.
+
+Validation will fail if **JaySchema** encounters a validation rule that references an external schema, if that schema is not `register`ed.
+
+There are several ways to ensure that all referenced schemas are registered:
+
+### Using a loader
+
+Pass a `loader` callback to the `JaySchema` constructor. When an external schema is needed, **JaySchema** will call your loader. See the constructor documentation, above. **Using a loader requires you to validate asynchronously.**
+
+### By using the `getMissingSchemas()` method
+
+This works with synchronous or async code.
+
+1. First, `register()` the main schemas you plan to use.
+2. Next, call `getMissingSchemas`, which returns an array of externally-referenced schemas. 
+3. Retrieve and `register()` each missing schema.
+4. Repeat from step 2 until there are no more missing schemas.
+
+### By using the `register()` return value
+
+This works with synchronous or async code.
+
+Each time you call `register(schema)`, the return value will be an array of missing external schemas that were referenced. You can use this to register the missing schemas.
+
+Calling `register(schemaA);` will (1) register `schemaA` and (2) return a list of missing schemas that were referenced by `schemaA`.
+
+If, instead, you want the list of *all* missing schemas referenced by all registrations that have been done so far, use the `getMissingSchemas()` method, above.
