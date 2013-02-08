@@ -1,0 +1,41 @@
+[
+    {
+        "description": "format",
+        "schema": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "tests": [
+            {
+                "description": "matches schema",
+                "data": "2013-02-08T03:40:15Z",
+                "valid": true
+            },
+            {
+                "description": "matches schema with time-offset",
+                "data": "2013-02-08T03:40:15-08:00",
+                "valid": true
+            },
+            {
+                "description": "matches schema (leap second)",
+                "data": "1998-12-31T23:59:60Z",
+                "valid": true
+            },
+            {
+                "description": "does not match schema (invalid mday)",
+                "data": "2013-02-29T03:40:15Z",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (no time-offset)",
+                "data": "2013-02-29T03:40:15",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (hour 24 not allowed)",
+                "data": "2013-02-08T24:40:15-08:00Z",
+                "valid": false
+            }
+        ]
+    }
+]
