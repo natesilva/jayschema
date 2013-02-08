@@ -162,5 +162,40 @@
                 "valid": false
             }
         ]
+    },
+
+    {
+        "description": "format ipv4",
+        "schema": {
+            "type": "string",
+            "format": "ipv4"
+        },
+        "tests": [
+            {
+                "description": "matches schema",
+                "data": "10.11.12.13",
+                "valid": true
+            },
+            {
+                "description": "matches schema (boundary conditions)",
+                "data": "255.255.255.0",
+                "valid": true
+            },
+            {
+                "description": "does not match schema",
+                "data": "10.11.12",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (out of bounds IPv4 address)",
+                "data": "256.11.12.13",
+                "valid": false
+            },
+            {
+                "description": "does not match schema (out of bounds IPv4 address)",
+                "data": "10.11.12.256",
+                "valid": false
+            }
+        ]
     }
 ]
