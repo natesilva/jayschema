@@ -27,9 +27,9 @@ js.validate(instance, schema, function(errs) {
     else { console.log('async validation OK!'); }
 });
 ```
-### Using the optional HTTP loader (or load from your database)
+### Loading schemas from HTTP or from your database
 
-Here a referenced schema is loaded using the built-in HTTP loader. You can also supply your own loader—for example, if you want to load schemas from a database.
+Here a referenced schema is loaded using the example HTTP loader. You can also supply your own loader—for example, if you want to load schemas from a database.
 
 ```js
 var JaySchema = require('jayschema');
@@ -63,7 +63,7 @@ js.validate(instance, schema, function(errs) {
 
 Have you ever wanted to validate JSON data server-side? Maybe you have a JSON-based API, or are using a NoSQL database that stores JSON documents.
 
-You can use an [ORM](https://npmjs.org/browse/keyword/orm) for this, but that’s overkill if you only need validation. And ORMs are often tied to a single database backend. What if you store session data in Redis and permanent data in MongoDB?
+You can use an [ORM](https://npmjs.org/browse/keyword/orm), but that’s overkill if you only need validation. And ORMs are often tied to a single database backend. What if you store session data in Redis and permanent data in MongoDB?
 
 With **JaySchema** you create a rich JSON Schema describing your documents and then validate documents against it. You control the validation. It’s not tied to any database or backend. You get to use the really nice JSON Schema syntax (see the [official examples](http://json-schema.org/examples.html)), you get useful error messages, and it can even do some types of validation that aren’t supported by popular ORMs.
 
@@ -106,13 +106,13 @@ Manually register *schema*. Useful if you have several related schemas you are w
 
 **Returns:** an array of missing schemas. A missing schema is one that was `$ref`erenced by the registered schema, but hasn’t been regisetered yet. If no missing schemas were referenced, an empty array is returned.
 
-See “Schema Loading”.
+See [Schema loading](#schema-loading).
 
 ### JaySchema.prototype.getMissingSchemas()
 
 Returns an array of missing schemas. A missing schema is one that was `$ref`erenced by a `register()`ed schema, but the referenced schema has not yet been loaded.
 
-See “Schema Loading”.
+See [Schema loading](#schema-loading).
 
 ### Loaders
 
@@ -120,7 +120,7 @@ While you can define your own loader to pass to the constructor, JaySchema inclu
 
 #### JaySchema.loaders.http
 
-Loads external `$ref`s using HTTP. **Caveat:** HTTP is inherently unreliable. For example, the network or site may be down, or the referenced schema may not be available any more. You really shouldn’t use this in production, but it’s great for testing.
+Loads external `$ref`s using HTTP. :warning: **Caveat:** HTTP is inherently unreliable. For example, the network or site may be down, or the referenced schema may not be available any more. You really shouldn’t use this in production, but it’s great for testing.
 
 ### Configuration options
 
