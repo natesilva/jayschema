@@ -4,7 +4,7 @@
 
 
 var should = require('should')
-  , schemaValidator = require('../suites/draft-04.js')
+  , schemaValidator = require('../lib/suites/draft-04')
   ;
 
 describe('Core § 3.6 JSON value equality:', function() {

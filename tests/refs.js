@@ -4,7 +4,7 @@
 
 
 var should = require('should')
-  , JaySchema = require('../jayschema.js')
+  , JaySchema = require('../lib/jayschema.js')
   ;
 
 describe('JSON references:',

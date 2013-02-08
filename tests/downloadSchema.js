@@ -4,7 +4,7 @@
 
 
 var assert = require('assert')
-  , httpLoader = require('../httpLoader.js')
+  , httpLoader = require('../lib/httpLoader.js')
   ;
 
 describe('GET request wrapper:',

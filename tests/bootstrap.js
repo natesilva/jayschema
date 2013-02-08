@@ -4,8 +4,8 @@
 
 
 var should = require('should')
-  , JaySchema = require('../jayschema.js')
-  , v4Schema = require('../metaschemas/json-schema-draft-v4.json')
+  , JaySchema = require('../lib/jayschema.js')
+  , v4Schema = require('../lib/suites/draft-04/json-schema-draft-v4.json')
   ;
 
 var schemaUrl = 'http://json-schema.org/draft-04/schema#';

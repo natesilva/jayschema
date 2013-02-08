@@ -8,7 +8,7 @@
     "type": "git",
     "url": "git://github.com/natesilva/jayschema.git"
   },
-  "main": "./jayschema.js",
+  "main": "./lib/jayschema.js",
   "keywords": [
     "json",
     "schema",

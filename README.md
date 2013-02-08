@@ -59,21 +59,19 @@ js.validate(instance, schema, function(errs) {
 	* The exact location in the schema of the rule that caused validation failure.
 	* If applicable, the value that was expected and the value that was seen in the document.
 
-## Why JSON Schema
+## Why JSON Schema?
 
-Have you ever wanted to validate JSON data server-side?
+Have you ever wanted to validate JSON data server-side? Maybe you have a JSON-based API, or are using a NoSQL database that stores JSON documents.
 
-Maybe you have a JSON-based API, or are using a NoSQL database that stores JSON documents.
-
-You can use an [ORM](https://npmjs.org/browse/keyword/orm) fort this, but that’s overkill if you only need validation. And ORMs are often tied to a single database backend. What if you store session data in Redis and permanent data in MongoDB?
+You can use an [ORM](https://npmjs.org/browse/keyword/orm) for this, but that’s overkill if you only need validation. And ORMs are often tied to a single database backend. What if you store session data in Redis and permanent data in MongoDB?
 
 With **JaySchema** you create a rich JSON Schema describing your documents and then validate documents against it. You control the validation. It’s not tied to any database or backend. You get to use the really nice JSON Schema syntax (see the [official examples](http://json-schema.org/examples.html)), you get useful error messages, and it can even do some types of validation that aren’t supported by popular ORMs.
 
 ## API
 
-### JaySchema([*loader*])
+### JaySchema([loader])
 
-**(Constructor)** The optional `loader` will be called each time an external `$ref` is encountered. It should load the referenced schema and return it.
+**(Constructor)** The optional *loader* will be called each time an external `$ref` is encountered. It should load the referenced schema and return it.
 
 If you don’t reference any external schemas, you don’t need to provide a *loader*.
 
@@ -93,7 +91,7 @@ function loader(ref, callback) {
 }
 ```
 
-### JaySchema.prototype.validate(*instance*, *schema* [, *callback*])
+### JaySchema.prototype.validate(instance, schema [, callback])
 
 Validate a JSON object, *instance*, against the given *schema*. If you provide a *callback*, validation will be done asynchronously.
 
@@ -102,7 +100,7 @@ Validate a JSON object, *instance*, against the given *schema*. If you provide a
 * **async:** Uses the standard Node callback signature. The first argument will be an array of errors, if any errors occurred, or `undefined` on success.
 * **synchronous:** If you don’t provide a callback, an array of errors will be returned. Success is indicated by an empty array.
 
-### JaySchema.prototype.register(*schema* [, *id*])
+### JaySchema.prototype.register(schema [, id])
 
 Manually register *schema*. Useful if you have several related schemas you are working with. The optional *id* can be used to register a schema that doesn’t have an `id` property, or which is referenced using a unique id.
 
