@@ -53,7 +53,7 @@ js.validate(instance, schema, function(errs) {
 
 * **Complete:** Covers all of the spec. Hundreds of our own unit tests, plus all relevant tests from [JSON-Schema-Test-Suite](https://github.com/json-schema/JSON-Schema-Test-Suite).
 * **Excellent handling of $refs:** Properly handles all `$ref`s, internal and external.
-* **Load $refs your way:** Ever want to load schemas from a database? With **JaySchema** you can provide a user-defined loader. When **JaySchema** encounters an external `$ref`, your loader will be called.
+* **Load $refs your way:** Ever want to load schemas from a database? With **JaySchema** you can provide a user-defined loader.
 * **Helpful:** Error messages tell you:
 	* The exact location in your document where validation failed.
 	* The exact location in the schema of the rule that caused validation failure.
