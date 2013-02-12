@@ -5,118 +5,119 @@
 
 var should = require('should')
   , schemaValidator = require('../lib/suites/draft-04')
+  , core = require('../lib/suites/draft-04/core.js')
   ;
 
 describe('Core § 3.6 JSON value equality:', function() {
   describe('null:', function() {
     it('should be equal', function() {
-      schemaValidator.jsonEqual(null, null).should.be.true;
+      core.jsonEqual(null, null).should.be.true;
     });
 
     it('should not be equal', function() {
-      schemaValidator.jsonEqual(null, undefined).should.be.false;
-      schemaValidator.jsonEqual(null, {}).should.be.false;
-      schemaValidator.jsonEqual(null, 0).should.be.false;
-      schemaValidator.jsonEqual(null, false).should.be.false;
-      schemaValidator.jsonEqual(null, '').should.be.false;
+      core.jsonEqual(null, undefined).should.be.false;
+      core.jsonEqual(null, {}).should.be.false;
+      core.jsonEqual(null, 0).should.be.false;
+      core.jsonEqual(null, false).should.be.false;
+      core.jsonEqual(null, '').should.be.false;
     });
   });
 
   describe('boolean:', function() {
     it('should be equal', function() {
-      schemaValidator.jsonEqual(true, true).should.be.true;
-      schemaValidator.jsonEqual(false, false).should.be.true;
+      core.jsonEqual(true, true).should.be.true;
+      core.jsonEqual(false, false).should.be.true;
     });
 
     it('should not be equal', function() {
-      schemaValidator.jsonEqual(true, false).should.be.false;
-      schemaValidator.jsonEqual(false, true).should.be.false;
-      schemaValidator.jsonEqual(true, {}).should.be.false;
-      schemaValidator.jsonEqual(true, 0).should.be.false;
-      schemaValidator.jsonEqual(true, '').should.be.false;
+      core.jsonEqual(true, false).should.be.false;
+      core.jsonEqual(false, true).should.be.false;
+      core.jsonEqual(true, {}).should.be.false;
+      core.jsonEqual(true, 0).should.be.false;
+      core.jsonEqual(true, '').should.be.false;
     });
   });
 
   describe('string:', function() {
     it('should be equal', function() {
-      schemaValidator.jsonEqual('hello', 'hello').should.be.true;
+      core.jsonEqual('hello', 'hello').should.be.true;
     });
 
     it('should not be equal', function() {
-      schemaValidator.jsonEqual('hello', 'goodbye').should.be.false;
-      schemaValidator.jsonEqual('hello', {}).should.be.false;
-      schemaValidator.jsonEqual('hello', 0).should.be.false;
-      schemaValidator.jsonEqual('hello', '').should.be.false;
-      schemaValidator.jsonEqual('0', 0).should.be.false;
+      core.jsonEqual('hello', 'goodbye').should.be.false;
+      core.jsonEqual('hello', {}).should.be.false;
+      core.jsonEqual('hello', 0).should.be.false;
+      core.jsonEqual('hello', '').should.be.false;
+      core.jsonEqual('0', 0).should.be.false;
     });
   });
 
   describe('number:', function() {
     it('should be equal', function() {
-      schemaValidator.jsonEqual(17, 17).should.be.true;
-      schemaValidator.jsonEqual(17, 17.0).should.be.true;
-      schemaValidator.jsonEqual(3.14195, 3.14195).should.be.true;
-      schemaValidator.jsonEqual(1/3, 1/3).should.be.true;
+      core.jsonEqual(17, 17).should.be.true;
+      core.jsonEqual(17, 17.0).should.be.true;
+      core.jsonEqual(3.14195, 3.14195).should.be.true;
+      core.jsonEqual(1/3, 1/3).should.be.true;
     });
 
     it('should not be equal', function() {
-      schemaValidator.jsonEqual(7, '7').should.be.false;
-      schemaValidator.jsonEqual(0, false).should.be.false;
-      schemaValidator.jsonEqual(42.1, 42.2).should.be.false;
-      schemaValidator.jsonEqual(42.1, 42).should.be.false;
+      core.jsonEqual(7, '7').should.be.false;
+      core.jsonEqual(0, false).should.be.false;
+      core.jsonEqual(42.1, 42.2).should.be.false;
+      core.jsonEqual(42.1, 42).should.be.false;
     });
   });
 
   describe('array:', function() {
     it('should be equal', function() {
-      schemaValidator.jsonEqual([], []).should.be.true;
-      schemaValidator.jsonEqual(['a', 'b', 'c'], ['a', 'b', 'c'])
+      core.jsonEqual([], []).should.be.true;
+      core.jsonEqual(['a', 'b', 'c'], ['a', 'b', 'c'])
         .should.be.true;
 
-      schemaValidator.jsonEqual(
+      core.jsonEqual(
         ['a', 'b', {foo: 'bar', baz: 42}],
         ['a', 'b', {baz: 42, foo: 'bar'}]
       ).should.be.true;
     });
 
     it('should not be equal', function() {
-      schemaValidator.jsonEqual(['a', 'b', 'c'], ['a', 'c', 'b'])
+      core.jsonEqual(['a', 'b', 'c'], ['a', 'c', 'b'])
         .should.not.be.true;
-      schemaValidator.jsonEqual(['a', 'b', 'c'], ['a', 'b'])
+      core.jsonEqual(['a', 'b', 'c'], ['a', 'b'])
         .should.not.be.true;
-      schemaValidator.jsonEqual(['a', 'b'], ['a', 'b', 'c'])
+      core.jsonEqual(['a', 'b'], ['a', 'b', 'c'])
         .should.not.be.true;
-      schemaValidator.jsonEqual(
+      core.jsonEqual(
         ['a', 'b', {foo: 'bar', baz: 42}],
         ['a', 'b', {baz: 42, foo: 'bar', x:10}]
       ).should.not.be.true;
-      schemaValidator.jsonEqual(['a', 'b'], {}).should.not.be.true;
+      core.jsonEqual(['a', 'b'], {}).should.not.be.true;
     });
   });
 
 
   describe('object:', function() {
     it('should be equal', function() {
-      schemaValidator.jsonEqual({}, {}).should.be.true;
-      schemaValidator.jsonEqual({foo: 'bar', baz: 42}, {foo: 'bar', baz: 42})
+      core.jsonEqual({}, {}).should.be.true;
+      core.jsonEqual({foo: 'bar', baz: 42}, {foo: 'bar', baz: 42})
         .should.be.true;
-      schemaValidator.jsonEqual({foo: 'bar', baz: 42}, {baz: 42, foo: 'bar'})
+      core.jsonEqual({foo: 'bar', baz: 42}, {baz: 42, foo: 'bar'})
         .should.be.true;
 
-      schemaValidator.jsonEqual(
+      core.jsonEqual(
         {id: 1, posts: [37, 42], user: {name: 'Fred', friends: 55}},
         {user: {friends: 55, name: 'Fred'}, posts: [37, 42], id: 1}
       ).should.be.true;
     });
 
     it('should not be equal', function() {
-      schemaValidator.jsonEqual({}, {age: 42}).should.not.be.true;
-      schemaValidator.jsonEqual({}, null).should.not.be.true;
-      schemaValidator.jsonEqual(
+      core.jsonEqual({}, {age: 42}).should.not.be.true;
+      core.jsonEqual({}, null).should.not.be.true;
+      core.jsonEqual(
         {foo: 'bar', baz: 42},
         {foo: 'bar', baz: 42, qux: 37}
       ).should.not.be.true;
-      schemaValidator.jsonEqual(
+      core.jsonEqual(
         {id: 1, posts: [37, 42], user: {name: 'Fred', friends: 55}},
         {user: {friends: 55, name: 'Fred'}, posts: [37, 42], id: 2}
       ).should.not.be.true;
