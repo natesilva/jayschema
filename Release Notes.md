@@ -1,3 +1,7 @@
+# 0.1.0-beta.3
+
+* Improved performance as indicated by profiling.
+
 # 0.1.0-beta
 
 * Updated version number to 0.1.0-beta, as 0.1.0 is the likely version number of the first non-beta release.
