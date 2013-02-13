@@ -1,3 +1,8 @@
+# 0.1.0-beta.4
+
+* Improved performance and reduced memory usage.
+* Internal code organization clean-up.
+
 # 0.1.0-beta.3
 
 * Improved performance as indicated by profiling.
