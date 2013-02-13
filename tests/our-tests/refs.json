@@ -107,7 +107,46 @@
                 "valid": false
             }
         ]
+    },
+
+    {
+        "description": "use the correct resolution scope",
+        "schema": {
+          "type": "object",
+          "id": "http://foo.bar/baz#",
+          "properties": {
+            "people": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/name" }
+            }
+          },
+
+          "definitions": {
+            "name": {
+              "type": "object",
+              "required": ["first", "last"],
+              "properties": {
+                "first": { "type": "string" },
+                "last": { "type": "string" }
+              }
+            }
+          }
+        },
+        "tests": [
+            {
+                "description": "matches schema",
+                "data": {
+                  "people": [ { "first": "Mohammed", "last": "Chang" } ]
+                },
+                "valid": true
+            },
+            {
+                "description": "does not match schema",
+                "data": {
+                  "people": [ { "last": "Chang" } ]
+                },
+                "valid": false
+            }
+        ]
     }
-
-
 ]
