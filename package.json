@@ -25,5 +25,8 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha tests"
   },
+  "bin": {
+    "jayschema": "./bin/validate.js"
+  },
   "license": "BSD-3-Clause"
 }
