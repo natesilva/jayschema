@@ -1,3 +1,10 @@
+# 0.1.0-beta.5
+
+* Updated test suite to include the new draft4 tests in JSON-Schema-Test-Suite.
+* Better internal handling of schema registration.
+* Fixed bugs related to using a URN schema id.
+* Fixed a bug affecting the "multipleOf" keyword when using very small numbers.
+
 # 0.1.0-beta.4
 
 * Improved performance and reduced memory usage.
