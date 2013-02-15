@@ -6,6 +6,7 @@
 var should = require('should')
   , SchemaRegistry = require('../lib/schemaRegistry.js')
   , core = require('../lib/suites/draft-04/core.js')
+  , uri = require('../lib/uri.js')
   ;
 
 describe('SchemaRegistry:', function() {
@@ -70,7 +71,7 @@ describe('SchemaRegistry:', function() {
       }
     };
 
-    it('should register schema', function() {
+    it('should register schema and sub-schemas', function() {
       reg.register(sch).should.be.empty;
       reg.get(sch.id + '#/definitions/foo').should.eql({type: 'integer'});
       reg.get(sch.id + '#bar').should.eql({id: '#bar', type: 'string'});
@@ -105,6 +106,80 @@ describe('SchemaRegistry:', function() {
       reg.register(sch1).should.have.length(2);
       reg.register(sch2).should.have.length(3);
       reg.getMissingSchemas().should.have.length(4);
+    });
+  });
+
+  describe('resolve fragments:', function() {
+    var schema = {
+        "id": "http://x.y.z/rootschema.json#",
+        "schema1": {
+            "id": "#foo"
+        },
+        "schema2": {
+            "id": "otherschema.json",
+            "nested": {
+                "id": "#bar"
+            },
+            "alsonested": {
+                "id": "t/inner.json#a"
+            }
+        },
+        "schema3": {
+            "id": "some://where.else/completely#"
+        }
+    }
+
+    var reg = new SchemaRegistry();
+    reg.register(schema);
+
+    var url = require('url');
+
+    it('should resolve fragment-identified schemas', function()
+    {
+      var scope, fragment, result;
+      scope = 'http://x.y.z/rootschema.json#';
+
+      fragment = '#';
+      result = reg.get(uri.resolve(scope, fragment));
+      result.should.eql(schema);
+
+      fragment = '#/schema1';
+      result = reg.get(uri.resolve(scope, fragment));
+      result.should.eql(schema.schema1);
+
+      fragment = '#foo';
+      result = reg.get(uri.resolve(scope, fragment));
+      result.should.eql(schema.schema1);
+
+      fragment = '#/schema2';
+      result = reg.get(uri.resolve(scope, fragment));
+      result.should.eql(schema.schema2);
+
+      fragment = '#/schema2/nested';
+      result = reg.get(uri.resolve(scope, fragment));
+      result.should.eql(schema.schema2.nested);
+
+      fragment = '#/schema2/alsonested';
+      result = reg.get(uri.resolve(scope, fragment));
+      result.should.eql(schema.schema2.alsonested);
+
+      fragment = '#/schema3';
+      result = reg.get(uri.resolve(scope, fragment));
+      result.should.eql(schema.schema3);
+
+      scope = 'http://x.y.z/otherschema.json';
+      fragment = '#';
+      result = reg.get(uri.resolve(scope, fragment));
+      result.should.eql(schema.schema2);
+
+      fragment = '#bar';
+      result = reg.get(uri.resolve(scope, fragment));
+      result.should.eql(schema.schema2.nested);
+
+      scope = 'http://x.y.z/t/inner.json';
+      fragment = '#a';
+      result = reg.get(uri.resolve(scope, fragment));
+      result.should.eql(schema.schema2.alsonested);
     });
   });
 
