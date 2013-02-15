@@ -13,6 +13,22 @@ var should = require('should')
   ;
 
 var BLACKLISTED_TESTS = {
+
+  'zeroTerminatedFloats.json': {
+    '*': 'optional feature that can\'t be implemented in JavaScript'
+  },
+
+  'format.json': {
+    'validation of regular expressions': {
+      '*': 'Draft v3 feature removed from Draft v4, incorrectly remains in ' +
+        'tests'
+    }
+  },
+
+  'jsregex.json': {
+    '*': 'Draft v3 feature removed from Draft v4, incorrectly remains in tests'
+  }
+
 };
 
 function shouldSkip(jsonFile, testGroup, test) {
