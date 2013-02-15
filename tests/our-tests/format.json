@@ -357,9 +357,14 @@
                 "valid": true
             },
             {
-                "description": "does not match schema (invalid scheme)",
-                "data": "-minus://my/doc",
-                "valid": false
+                "description": "matches schema (relative URL)",
+                "data": "myfile.json",
+                "valid": true
+            },
+            {
+                "description": "matches schema (fragment only)",
+                "data": "#myfragment",
+                "valid": true
             }
         ]
     }
