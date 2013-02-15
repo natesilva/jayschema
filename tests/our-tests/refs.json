@@ -148,5 +148,47 @@
                 "valid": false
             }
         ]
+    },
+
+    {
+        "description": "handle urn schema ids",
+        "schema": {
+          "type": "object",
+          "id": "urn:foo:bar",
+          "properties": {
+            "people": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/name" }
+            }
+          },
+
+          "definitions": {
+            "name": {
+              "type": "object",
+              "required": ["first", "last"],
+              "properties": {
+                "first": { "type": "string" },
+                "last": { "type": "string" }
+              }
+            }
+          }
+        },
+        "tests": [
+            {
+                "description": "matches schema",
+                "data": {
+                  "people": [ { "first": "Mohammed", "last": "Chang" } ]
+                },
+                "valid": true
+            },
+            {
+                "description": "does not match schema",
+                "data": {
+                  "people": [ { "last": "Chang" } ]
+                },
+                "valid": false
+            }
+        ]
     }
+
 ]
