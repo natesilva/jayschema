@@ -21,8 +21,11 @@ describe('JSON references:',
       type: 'object',
       required: ['first', 'last'],
       properties: {
-        first: { type: 'string' },
+        first: { $ref: '#/definitions/nameField' },
         last: { type: 'string' }
+      },
+      definitions: {
+        nameField: { type: 'string' }
       }
     };
 
