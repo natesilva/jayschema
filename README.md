@@ -1,8 +1,10 @@
-# JaySchema: JavaScript JSON Schema Validator
+# JaySchema
 
-## Complete and convenient validator for Node.js
+A [JSON Schema](http://json-schema.org/documentation.html) validator for Node.js.
 
-Use **JaySchema** to validate JSON objects using [**JSON Schema Draft v4**](http://json-schema.org/documentation.html). This is a pre-release (beta) version.
+* Complete validation coverage of JSON Schema Draft v4.
+* Useful error messages.
+* Optional dynamic loader for referenced schemas (load schemas from a database or the web)
 
 ## Install
 
@@ -27,13 +29,15 @@ js.validate(instance, schema, function(errs) {
     else { console.log('async validation OK!'); }
 });
 ```
+
 ### Loading schemas from HTTP or from your database
 
-Here a referenced schema is loaded using the example HTTP loader. You can also supply your own loader—for example, if you want to load schemas from a database.
+Here the Geographic Coordinate schema is loaded over HTTP. You can also supply your own loader—for example, to load schemas from a database.
 
 ```js
 var JaySchema = require('jayschema');
 var js = new JaySchema(JaySchema.loaders.http);     // we provide the HTTP loader here
+                                                    // you could load from a DB instead
 
 var instance = { "location": { "latitude": 48.8583, "longitude": 2.2945 } };
 var schema = {
@@ -49,23 +53,13 @@ js.validate(instance, schema, function(errs) {
 });
 ```
 
-## Features
-
-* **Complete:** Covers all of the spec. Hundreds of our own unit tests, plus all relevant tests from [JSON-Schema-Test-Suite](https://github.com/json-schema/JSON-Schema-Test-Suite).
-* **Excellent handling of $refs:** Properly handles all `$ref`s, internal and external.
-* **Load $refs your way:** Ever want to load schemas from a database? With **JaySchema** you can provide a user-defined loader.
-* **Helpful:** Error messages tell you:
-	* The exact location in your document where validation failed.
-	* The exact location in the schema of the rule that caused validation failure.
-	* If applicable, the value that was expected and the value that was seen in the document.
-
 ## Why JSON Schema?
 
-Have you ever wanted to validate JSON data server-side? Maybe you have a JSON-based API, or are using a NoSQL database that stores JSON documents.
-
-You can use an [ORM](https://npmjs.org/browse/keyword/orm), but that’s overkill if you only need validation. And ORMs are often tied to a single database backend. What if you store session data in Redis and permanent data in MongoDB?
-
-With **JaySchema** you create a rich JSON Schema describing your documents and then validate documents against it. You control the validation. It’s not tied to any database or backend. You get to use the really nice JSON Schema syntax (see the [official examples](http://json-schema.org/examples.html)), you get useful error messages, and it can even do some types of validation that aren’t supported by popular ORMs.
+* Validate JSON server-side:
+    * For your JSON-based API
+    * For data that you want to store in a NoSQL database
+* No [ORM](https://npmjs.org/browse/keyword/orm) required. Change databases or store data in multiple databases using the same schemas. For example, session data in Redis, permanent data in MongoDB.
+* JSON Schema has a really nice declarative syntax. See the [official examples](http://json-schema.org/examples.html).
 
 ## API
 
@@ -73,7 +67,7 @@ With **JaySchema** you create a rich JSON Schema describing your documents and t
 
 **(Constructor)** The optional *loader* will be called each time an external `$ref` is encountered. It should load the referenced schema and return it.
 
-If you don’t reference any external schemas, you don’t need to provide a *loader*.
+If you don’t reference any external schemas, or if you pre-register all the schemas you’re using, you don’t need to provide a *loader*.
 
 **If you provide a *loader*, you should call the validate() function asynchronously.** That’s because loading involves disk or network I/O, and I/O operations in Node are asynchronous.
 
@@ -116,7 +110,7 @@ See [Schema loading](#schema-loading).
 
 ### Loaders
 
-While you can define your own loader to pass to the constructor, JaySchema includes one built-in loader for your convenience.
+A loader can be passed to the constructor, or you can set the `loader` property at any time. You can define your own loader. **JaySchema** also includes one built-in loader for your convenience:
 
 #### JaySchema.loaders.http
 
@@ -128,11 +122,15 @@ Loads external `$ref`s using HTTP. :warning: **Caveat:** HTTP is inherently unre
 
 The maximum depth to recurse when retrieving external `$ref` schemas using a loader. The default is `5`.
 
+### loader
+
+The schema loader to use, if any. (The same schema loader that was passed to the `JaySchema` constructor.) You can change or override this at any time.
+
 ## Schema loading
 
-**JaySchema** provides a number of ways to load externally-referenced schemas.
+**JaySchema** provides several ways to register externally-referenced schemas.
 
-In JSON Schema, you use the `$ref` keyword to pull in an external schema. For example, you might reference a schema that is available in a local database.
+You use the `$ref` keyword to pull in an external schema. For example, you might reference a schema that’s available in a local database.
 
 Validation will fail if **JaySchema** encounters a validation rule that references an external schema, if that schema is not `register`ed.
 
@@ -140,7 +138,7 @@ There are several ways to ensure that all referenced schemas are registered:
 
 ### Using a loader
 
-Pass a `loader` callback to the `JaySchema` constructor. When an external schema is needed, **JaySchema** will call your loader. See the constructor documentation, above. **Using a loader requires you to validate asynchronously.**
+Pass a `loader` callback to the `JaySchema` constructor. When an external schema is needed, **JaySchema** will call your loader. See the constructor documentation, above. Using a loader requires you to validate asynchronously.
 
 ### By using the `getMissingSchemas()` method
 
@@ -157,7 +155,7 @@ This works with synchronous or async code.
 
 Each time you call `register(schema)`, the return value will be an array of missing external schemas that were referenced. You can use this to register the missing schemas.
 
-Calling `register(schemaA);` will (1) register `schemaA` and (2) return a list of missing schemas that were referenced by `schemaA`.
+In other words: calling `register(schemaA);` will (1) register `schemaA` and (2) return a list of missing schemas that were referenced by `schemaA`.
 
 If, instead, you want the list of *all* missing schemas referenced by all registrations that have been done so far, use the `getMissingSchemas()` method, above.
 
@@ -170,4 +168,4 @@ If, instead, you want the list of *all* missing schemas referenced by all regist
 * `email`: Must match [RFC 5322, Section 3.4.1](https://tools.ietf.org/html/rfc5322#section-3.4.1), with the following limitations: `quoted-string`s, `domain-literal`s, comments, and folding whitespace are not supported; the `domain` portion must be a hostname as in the `hostname` keyword.
 * `ipv4`: Must be a dotted-quad IPv4 address.
 * `ipv6`: Must be a valid IPv6 address as per [RFC 2373 section 2.2](http://tools.ietf.org/html/rfc2373#section-2.2).
-* `uri`: As in [RFC 3986 Appendix A](http://tools.ietf.org/html/rfc3986#appendix-A), with the exception that well-formedness of internal elements, including percent encoding and authority strings, is not verified.
+* `uri`: As in [RFC 3986 Appendix A](http://tools.ietf.org/html/rfc3986#appendix-A), including relative URIs (no scheme part, fragment-only), with the exception that well-formedness of internal elements, including percent encoding and authority strings, is not verified.

@@ -1,3 +1,7 @@
+# 0.1.0
+
+* First non-beta release.
+
 # 0.1.0-beta.5
 
 * Updated test suite to include the new draft4 tests in JSON-Schema-Test-Suite.
