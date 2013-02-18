@@ -75,8 +75,14 @@ var BLACKLISTED_TESTS = {
   'zeroTerminatedFloats.json': {
     '*': 'no longer enforced in v4'
 
-  }
+  },
 
+  'ref.json': {
+    'remote ref, containing refs itself': {
+      '*': 'not testing remote refs in draft3 (we do the draft4 version of ' +
+        'this test)'
+    }
+  }
 };
 
 function shouldSkip(jsonFile, testGroup, test) {
