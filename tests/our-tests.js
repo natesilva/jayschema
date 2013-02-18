@@ -67,7 +67,7 @@ describe('Our test suite (running synchronously):', function() {
     var testGroups = require(jsonFile);
 
     testGroups.forEach(function(group) {
-      describe(path.basename(jsonFile) + '/' + group.description + ':',
+      describe(path.relative('.', jsonFile) + '|' + group.description + ':',
         function()
       {
         group.tests.forEach(function(test) {
