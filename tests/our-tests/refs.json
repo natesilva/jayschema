@@ -202,10 +202,9 @@
                 "f": {"$ref": "#/definitions/e"},
                 "g": {"$ref": "#/definitions/f"},
                 "h": {"$ref": "#/definitions/g"},
-                "i": {"$ref": "#/definitions/h"},
-                "j": {"$ref": "#/definitions/i"}
+                "i": {"$ref": "#/definitions/h"}
             },
-            "$ref": "#/definitions/j"
+            "$ref": "#/definitions/i"
         },
         "tests": [
             {
@@ -233,10 +232,9 @@
                 "g": {"$ref": "#/definitions/f"},
                 "h": {"$ref": "#/definitions/g"},
                 "i": {"$ref": "#/definitions/h"},
-                "j": {"$ref": "#/definitions/i"},
-                "k": {"$ref": "#/definitions/j"}
+                "j": {"$ref": "#/definitions/i"}
             },
-            "$ref": "#/definitions/k"
+            "$ref": "#/definitions/j"
         },
         "tests": [
             {
