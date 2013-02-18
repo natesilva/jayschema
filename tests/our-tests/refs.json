@@ -189,6 +189,78 @@
                 "valid": false
             }
         ]
+    },
+    {
+        "description": "deep nested refs",
+        "schema": {
+            "definitions": {
+                "a": {"type": "integer"},
+                "b": {"$ref": "#/definitions/a"},
+                "c": {"$ref": "#/definitions/b"},
+                "d": {"$ref": "#/definitions/c"},
+                "e": {"$ref": "#/definitions/d"},
+                "f": {"$ref": "#/definitions/e"},
+                "g": {"$ref": "#/definitions/f"},
+                "h": {"$ref": "#/definitions/g"},
+                "i": {"$ref": "#/definitions/h"},
+                "j": {"$ref": "#/definitions/i"}
+            },
+            "$ref": "#/definitions/j"
+        },
+        "tests": [
+            {
+                "description": "nested ref valid",
+                "data": 5,
+                "valid": true
+            },
+            {
+                "description": "nested ref invalid",
+                "data": "a",
+                "valid": false
+            }
+        ]
+    },
+    {
+        "description": "deep nested refs (too deep)",
+        "schema": {
+            "definitions": {
+                "a": {"type": "integer"},
+                "b": {"$ref": "#/definitions/a"},
+                "c": {"$ref": "#/definitions/b"},
+                "d": {"$ref": "#/definitions/c"},
+                "e": {"$ref": "#/definitions/d"},
+                "f": {"$ref": "#/definitions/e"},
+                "g": {"$ref": "#/definitions/f"},
+                "h": {"$ref": "#/definitions/g"},
+                "i": {"$ref": "#/definitions/h"},
+                "j": {"$ref": "#/definitions/i"},
+                "k": {"$ref": "#/definitions/j"}
+            },
+            "$ref": "#/definitions/k"
+        },
+        "tests": [
+            {
+                "description": "nested ref invalid",
+                "data": "a",
+                "valid": false
+            }
+        ]
+    },
+    {
+        "description": "circular refs should not cause infinite loop",
+        "schema": {
+            "definitions": {
+                "a": {"$ref": "#/definitions/b"},
+                "b": {"$ref": "#/definitions/a"}
+            },
+            "$ref": "#/definitions/b"
+        },
+        "tests": [
+            {
+                "description": "nested ref invalid",
+                "data": "a",
+                "valid": false
+            }
+        ]
     }
-
 ]
