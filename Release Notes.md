@@ -1,3 +1,7 @@
+# 0.1.1
+
+* Nested `$ref`s which refer to other `$ref`s are now handled correctly.
+
 # 0.1.0
 
 * First non-beta release.
