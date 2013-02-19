@@ -1,3 +1,8 @@
+# 0.1.3
+
+* **BUGFIX**: The `getMissingSchemas()` method is fixed. It was showing some schemas as missing, when in fact, they were registered.
+* **FEATURE**: You can pass a string instead of a schema to the `validate()` function. If the string is the `id` of a registered schema, your instance will be validated against that schema.
+
 # 0.1.2
 
 * The `JaySchema.errors` object is now exposed. Authors of schema loaders may wish to use the `JaySchema.errors.SchemaLoaderError` to signal failure to load a requested schema.
