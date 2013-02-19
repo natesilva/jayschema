@@ -13,7 +13,6 @@ describe('JSON references:',
   describe('reference previously manually-registered schema:', function() {
 
     var jj = new JaySchema();
-    jj.debug = true;
     var sch;
 
     var otherSchema = {
