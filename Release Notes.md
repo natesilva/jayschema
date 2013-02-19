@@ -1,3 +1,8 @@
+# 0.1.2
+
+* The `JaySchema.errors` object is now exposed. Authors of schema loaders may wish to use the `JaySchema.errors.SchemaLoaderError` to signal failure to load a requested schema.
+* The included HTTP loader now works with HTTPS as well, and follows 3XX redirects.
+
 # 0.1.1
 
 * Nested `$ref`s which refer to other `$ref`s are now handled correctly.
