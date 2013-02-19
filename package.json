@@ -8,6 +8,7 @@
     "type": "git",
     "url": "git://github.com/natesilva/jayschema.git"
   },
+  "bugs": "https://github.com/natesilva/jayschema/issues",
   "main": "./lib/jayschema.js",
   "keywords": [
     "json",
@@ -20,7 +21,8 @@
   "dependencies": {},
   "devDependencies": {
     "should": "~1.2.1",
-    "mocha": "~1.8.1"
+    "mocha": "~1.8.1",
+    "redis": "~0.8.2"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha tests"
