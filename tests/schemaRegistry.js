@@ -183,4 +183,28 @@ describe('SchemaRegistry:', function() {
     });
   });
 
+  describe('isRegistered:', function() {
+
+    var reg = new SchemaRegistry();
+    var sch = {
+      id: 'http://foo.bar/baz#',
+      type: 'integer'
+    };
+    reg.register(sch);
+
+    it('should find the registered schema', function() {
+      reg.isRegistered('http://foo.bar/baz#').should.be.true;
+    });
+
+    it('should find the registered schema if the request is missing a "#"',
+    function()
+    {
+      reg.isRegistered('http://foo.bar/baz').should.be.true;
+    });
+
+    it('should not find an unregistered schema', function() {
+      reg.isRegistered('http://foo.bar/qux').should.be.false;
+    });
+
+  });
 });
