@@ -103,9 +103,24 @@ describe('SchemaRegistry:', function() {
     };
 
     it('should be able to return merged missing schemas', function() {
-      reg.register(sch1).should.have.length(2);
-      reg.register(sch2).should.have.length(3);
-      reg.getMissingSchemas().should.have.length(4);
+      var missing;
+      missing = reg.register(sch1);
+      missing.should.have.length(2);
+      missing.should.include('http://company.com/foo/');
+      missing.should.include('http://organization.org/bar/');
+
+      missing = reg.register(sch2);
+      missing.should.have.length(3);
+      missing.should.include('http://organization.org/bar/');
+      missing.should.include('http://foo.bar/qux');
+      missing.should.include('http://some.site/and/some/schema');
+
+      missing = reg.getMissingSchemas();
+      missing.should.have.length(4);
+      missing.should.include('http://company.com/foo/');
+      missing.should.include('http://organization.org/bar/');
+      missing.should.include('http://foo.bar/qux');
+      missing.should.include('http://some.site/and/some/schema');
     });
   });
 
@@ -204,6 +219,56 @@ describe('SchemaRegistry:', function() {
 
     it('should not find an unregistered schema', function() {
       reg.isRegistered('http://foo.bar/qux').should.be.false;
+    });
+
+  });
+
+  describe('test for bug exposed in issue #2:', function() {
+
+    var addressSchema = {
+      "id": "https://example.org/api/address.schema.json",
+      "type": "string"
+    };
+
+    var masterSchema = {
+      "title": "user",
+      "id": "https://example.org/api/user.schema.json",
+      "properties": {
+        "addresses": {
+          "type": "array",
+          "items": {
+            "$ref": "https://example.org/api/address.schema.json"
+          }
+        }
+      }
+    };
+
+    var data = {
+      "addresses": [
+        "address1",
+        "address2",
+        "address3"
+      ]
+    };
+
+    it('should show no missing schemas', function() {
+      var reg = new SchemaRegistry();
+      reg.register(addressSchema).should.be.empty;
+      reg.register(masterSchema).should.be.empty;
+    });
+
+    it('should show a missing schema when registered in reverse order',
+      function()
+    {
+      var reg = new SchemaRegistry();
+
+      var missing;
+      missing = reg.register(masterSchema);
+      missing.should.have.length(1);
+      missing.should.include('https://example.org/api/address.schema.json');
+
+      missing = reg.register(addressSchema);
+      missing.should.be.empty;
     });
 
   });
