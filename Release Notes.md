@@ -1,3 +1,7 @@
+# 0.1.4
+
+* **BUGFIX**: More consistent checks for registered schemas. Fixes issue #2: the `register()` method return value was showing some schemas missing, when in fact, they were registered.
+
 # 0.1.3
 
 * **BUGFIX**: The `getMissingSchemas()` method is fixed. It was showing some schemas as missing, when in fact, they were registered.
