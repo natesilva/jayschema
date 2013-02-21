@@ -3,8 +3,8 @@
 A [JSON Schema](http://json-schema.org/documentation.html) validator for Node.js.
 
 * Complete validation coverage of JSON Schema Draft v4.
-* Useful error messages.
 * Optional dynamic loader for referenced schemas (load schemas from a database or the web)
+* Useful error messages.
 
 ## Install
 
@@ -88,6 +88,8 @@ function loader(ref, callback) {
 ### JaySchema.prototype.validate(instance, schema [, callback])
 
 Validate a JSON object, *instance*, against the given *schema*. If you provide a *callback*, validation will be done asynchronously.
+
+*schema* can be an actual JSON Schema (a JSON object), or it can be the `id` of a previously-registered schema (a string).
 
 #### Return value
 

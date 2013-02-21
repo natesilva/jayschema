@@ -13,7 +13,6 @@ describe('JSON references:',
   describe('reference previously manually-registered schema:', function() {
 
     var jj = new JaySchema();
-    jj.debug = true;
     var sch;
 
     var otherSchema = {
@@ -52,6 +51,45 @@ describe('JSON references:',
       };
 
       jj.validate({name: {last: 'Chang'}}, sch).should.not.be.empty;
+    });
+
+  });
+
+  describe('validate using the string id of a registered schema', function() {
+
+    var jj = new JaySchema();
+
+    var schema = {
+      id: 'http://foo.bar/name#',
+      type: 'object',
+      required: ['first', 'last'],
+      properties: {
+        first: { $ref: '#/definitions/nameField' },
+        last: { type: 'string' }
+      },
+      definitions: {
+        nameField: { type: 'string' }
+      }
+    };
+
+    jj.register(schema);
+
+    it('should validate', function() {
+      var data = {
+        'first': 'John',
+        'middle': 'Q.',
+        'last': 'Public'
+      };
+
+      jj.validate(data, 'http://foo.bar/name#').should.be.empty;
+    });
+
+    it('should fail validation', function() {
+      var data = {
+        'first': 'John'
+      };
+
+      jj.validate(data, 'http://foo.bar/name#').should.not.be.empty;
     });
 
   });
