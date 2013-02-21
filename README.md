@@ -110,6 +110,12 @@ Returns an array of missing schemas. A missing schema is one that was `$ref`eren
 
 See [Schema loading](#schema-loading).
 
+### JaySchema.prototype.isRegistered(id)
+
+Return boolean indicating whether the specified schema id has previously been registered.
+
+See [Schema loading](#schema-loading).
+
 ### Loaders
 
 A loader can be passed to the constructor, or you can set the `loader` property at any time. You can define your own loader. **JaySchema** also includes one built-in loader for your convenience:
