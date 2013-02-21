@@ -94,4 +94,29 @@ describe('JSON references:',
 
   });
 
+  describe('ensure that JaySchema.prototype.isRegistered(id) works',
+    function()
+  {
+    var jj = new JaySchema();    
+    var sch = {
+      id: 'http://foo.bar/baz#',
+      type: 'string',
+      definitions: {
+        qux: { id: '#qux', type: 'integer' }
+      }
+    };
+    jj.register(sch);
+
+    it('should show the schema is registered', function() {
+      jj.isRegistered('http://foo.bar/baz#').should.be.true;
+      jj.isRegistered('http://foo.bar/baz').should.be.true;
+      jj.isRegistered('http://foo.bar/baz#qux').should.be.true;
+    });
+
+    it('should show the schema is not registered', function() {
+      jj.isRegistered('http://qux.zzz/baz#').should.be.false;
+    });
+
+  });
+
 });
