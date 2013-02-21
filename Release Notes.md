@@ -1,3 +1,7 @@
+# 0.1.5
+
+* **FEATURE**: You can now query to see if a schema has been registered, by calling the `isRegistered(id)` method of the `JaySchema` class.
+
 # 0.1.4
 
 * **BUGFIX**: More consistent checks for registered schemas. Fixes issue #2: the `register()` method return value was showing some schemas missing, when in fact, they were registered.
