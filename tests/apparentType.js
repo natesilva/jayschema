@@ -24,6 +24,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(null).should.not.equal('array');
       core.apparentType({foo: [1, 2, 3]}).should.not.equal('array');
       core.apparentType('hello world').should.not.equal('array');
+      core.apparentType(function(){}).should.not.equal('array');
     });
   });
 
@@ -43,6 +44,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(null).should.not.equal('boolean');
       core.apparentType({foo: [1, 2]}).should.not.equal('boolean');
       core.apparentType('hello world').should.not.equal('boolean');
+      core.apparentType(function(){}).should.not.equal('boolean');
     });
   });
 
@@ -61,6 +63,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(null).should.not.equal('integer');
       core.apparentType({foo: [1, 2]}).should.not.equal('integer');
       core.apparentType('hello world').should.not.equal('integer');
+      core.apparentType(function(){}).should.not.equal('integer');
     });
   });
 
@@ -78,6 +81,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(null).should.not.equal('number');
       core.apparentType({foo: [1, 2, 3]}).should.not.equal('number');
       core.apparentType('hello world').should.not.equal('number');
+      core.apparentType(function(){}).should.not.equal('number');
     });
   });
 
@@ -95,6 +99,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(42.1).should.not.equal('null');
       core.apparentType({foo: [1, 2, 3]}).should.not.equal('null');
       core.apparentType('hello world').should.not.equal('null');
+      core.apparentType(function(){}).should.not.equal('null');
     });
   });
 
@@ -115,6 +120,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(42.1).should.not.equal('object');
       core.apparentType(null).should.not.equal('object');
       core.apparentType('hello world').should.not.equal('object');
+      core.apparentType(function(){}).should.not.equal('object');
     });
 
     it('should not mistake null or Array for "object"', function() {
@@ -137,6 +143,26 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(42.1).should.not.equal('string');
       core.apparentType(null).should.not.equal('string');
       core.apparentType({foo: 'hello'}).should.not.equal('string');
+      core.apparentType(function(){}).should.not.equal('string');
+    });
+  });
+
+  describe('function:', function() {
+    it('should return "function"', function() {
+      core.apparentType(function(){}).should.equal('function');
+      core.apparentType([].map).should.equal('function');
+    });
+
+    it ('should not return "function" for non-function types', function() {
+      core.apparentType([true, false]).should.not.equal('function');
+      core.apparentType(true).should.not.equal('function');
+      core.apparentType(false).should.not.equal('function');
+      core.apparentType(0).should.not.equal('function');
+      core.apparentType(42).should.not.equal('function');
+      core.apparentType(42.1).should.not.equal('function');
+      core.apparentType(null).should.not.equal('function');
+      core.apparentType({foo: [1, 2]}).should.not.equal('function');
+      core.apparentType('hello world').should.not.equal('function');
     });
   });
 });
