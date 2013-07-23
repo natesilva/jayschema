@@ -7,6 +7,9 @@ var JaySchema = require('../lib/jayschema.js')
   , path = require('path')
   ;
 
+// support Node 0.6.x
+var existsSync = fs.existsSync || path.existsSync;
+
 var META_SCHEMA_PATH = path.join(__dirname, '..', 'lib', 'suites', 'draft-04',
   'json-schema-draft-v4.json');
 var META_SCHEMA = require(META_SCHEMA_PATH);
@@ -24,12 +27,12 @@ if (!instance || !schema) {
   return syntax();
 }
 
-if (!fs.existsSync(instance)) {
+if (!existsSync(instance)) {
   console.error('ERR: instance', '"' + instance + '"', 'not found');
   return;
 }
 
-if (!fs.existsSync(schema)) {
+if (!existsSync(schema)) {
   console.error('ERR: schema', '"' + schema + '"', 'not found');
   return;
 }

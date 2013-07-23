@@ -17,6 +17,9 @@ var should = require('should')
   , path = require('path')
   ;
 
+// support Node 0.6.x
+var existsSync = fs.existsSync || path.existsSync;
+
 var BLACKLISTED_TESTS = {
 
   'format.json': {
@@ -133,10 +136,10 @@ describe('JSON Schema Test Suite:', function() {
   it('should find the JSON-Schema-Test-Suite tests (do `git submodule init; ' +
     'git submodule update` to include them)', function()
   {
-    fs.existsSync(testPath).should.be.true;
+    existsSync(testPath).should.be.true;
   });
 
-  if (!fs.existsSync(testPath)) { return; }
+  if (!existsSync(testPath)) { return; }
 
   var files = getTests(testPath);
 
