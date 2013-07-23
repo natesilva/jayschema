@@ -22,8 +22,7 @@ describe('Custom loaders:', function() {
 
     it('should not be allowed to recurse indefinitely', function(done) {
       js.validate({}, { '$ref': 'foo' }, function(errs) {
-        errs.should.not.be.empty;
-        errs[0].should.be.an.instanceOf(JaySchema.errors.ValidationError)
+        should.exist(errs);
         done();
       });
     });
