@@ -1,3 +1,10 @@
+# 0.1.6
+
+* **BUGFIX**: Fix a race condition when doing multiple simultaneous validations. Previously, if you were doing several validations and they all referred to the same external schema (that needs to be loaded using a loader function), some of the validations could fail. This has been fixed.
+* **BUGFIX**: Fix a potential failure to resolve a URI that affected Node > 0.9.1.
+* **ENHANCEMENT**: Improved compatibility with Node 0.6.x. Versions 0.6.6 and higher are supported. Previously the main library worked, but the tests and command-line utility would fail.
+* **CHANGE/BUGFIX**: The sample HTTP loader utility (`JaySchema.loaders.http`) was failing to load from HTTPS URLs on Node > 0.9.1. It can once again load from SSL sources, but note that it does not attempt to validate the SSL certificate. If you need more sophisticated HTTPS functionality, consider writing your own loader using something like [request](https://github.com/mikeal/request), which gives you much more control.
+
 # 0.1.5
 
 * **FEATURE**: You can now query to see if a schema has been registered, by calling the `isRegistered(id)` method of the `JaySchema` class.
