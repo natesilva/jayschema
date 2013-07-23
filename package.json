@@ -18,7 +18,9 @@
   "engines": {
     "node": "*"
   },
-  "dependencies": {},
+  "dependencies": {
+    "when": "~2.2.1"
+  },
   "devDependencies": {
     "should": "~1.2.1",
     "mocha": "~1.8.1",
