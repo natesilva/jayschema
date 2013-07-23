@@ -23,8 +23,7 @@
   },
   "devDependencies": {
     "should": "~1.2.1",
-    "mocha": "~1.8.1",
-    "redis": "~0.8.2"
+    "mocha": "~1.8.1"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha tests"
