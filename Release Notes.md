@@ -1,3 +1,10 @@
+# 0.2.0
+
+* :exclamation: — **[BREAKING CHANGE]** In a few rare cases the async version of `validate()` returned a bare error object. The async version of `validate()` is documented to return an *array* of error objects, or `undefined` if there are no errors. It now behaves as documented.
+* There’s a small possibility that this could break code that depends on the old, quirky, behavior. Therefore the version number has been incremented so  existing projects that depend on the 0.1.x behavior will not be unexpectedly upgraded, as long as you are following [best practices](https://npmjs.org/doc/json.html#Tilde-Version-Ranges) for `package.json` dependencies.
+    * A good dependency specification is: `"jayschema": "~0.2.0"`, or `"jayschema": "~0.1.6"` if you still need the old behavior.
+    * `"jayschema": "0.2.x"` and `"jayschema": "0.1.x"` would also work.
+
 # 0.1.6
 
 * **BUGFIX**: Fix a race condition when doing multiple simultaneous validations. Previously, if you were doing several validations and they all referred to the same external schema (that needs to be loaded using a loader function), some of the validations could fail. This has been fixed.
