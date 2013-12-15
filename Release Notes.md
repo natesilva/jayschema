@@ -1,3 +1,7 @@
+# 0.2.1
+
+* **BUGFIX/ENHANCEMENT**: Properly support the Draft v3 `date` and `time` formats.
+
 # 0.2.0
 
 * :exclamation: — **[BREAKING CHANGE]** In a few rare cases the async version of `validate()` returned a bare error object. The async version of `validate()` is documented to return an *array* of error objects, or `undefined` if there are no errors. It now behaves as documented.
