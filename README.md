@@ -171,7 +171,7 @@ If, instead, you want the list of *all* missing schemas referenced by all regist
 
 **JaySchema** supports the following values for the optional `format` keyword:
 
-* `date-time`: Must match the `date-time` specification given in [RFC 3339, Section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6).
+* `date-time`: Must match the `date-time` specification given in [RFC 3339, Section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). This expects *both* a date and a time. For date-only validation or time-only validation, JaySchema supports the older draft v3 `date` and `time` formats.
 * `hostname`: Must match the “Preferred name syntax” given in [RFC 1034, Section 3.5](https://tools.ietf.org/html/rfc1034#section-3.5), with the exception that hostnames are permitted to begin with a digit, as per [RFC 1123 Section 2.1](http://tools.ietf.org/html/rfc1123#section-2.1).
 * `email`: Must match [RFC 5322, Section 3.4.1](https://tools.ietf.org/html/rfc5322#section-3.4.1), with the following limitations: `quoted-string`s, `domain-literal`s, comments, and folding whitespace are not supported; the `domain` portion must be a hostname as in the `hostname` keyword.
 * `ipv4`: Must be a dotted-quad IPv4 address.
