@@ -13,16 +13,16 @@ describe('GET request wrapper:',
   describe('retrieve JSON Schema Draft V4 schema:', function() {
 
     it('should retrieve the schema', function(done) {
-      var url = 'http://json-schema.org/draft-04/schema#';
+      var url = 'http://jayschema.org/json-schema-draft-4.json#';
       httpLoader(url, function(err, schema) {
         if (err) { throw err; }
-        assert.equal(url, schema.id);
+        assert.equal('http://json-schema.org/draft-04/schema#', schema.id);
         done();
       });
     });
 
     it('should follow 3xx redirects to retrieve a schema', function(done) {
-      var url = 'http://www.json-schema.org/draft-04/schema#';
+      var url = 'http://www.jayschema.org/json-schema-draft-4.json#';
       httpLoader(url, function(err, schema) {
         if (err) { throw err; }
         assert.equal('http://json-schema.org/draft-04/schema#', schema.id);
@@ -32,7 +32,7 @@ describe('GET request wrapper:',
 
     it('should retrieve a schema over HTTPS (SSL)', function(done) {
       var url =
-        'https://raw.github.com/json-schema/json-schema/master/draft-04/schema';
+        'https://jayschema.org.s3.amazonaws.com/json-schema-draft-4.json#';
       httpLoader(url, function(err, schema) {
         if (err) { throw err; }
         assert.equal('http://json-schema.org/draft-04/schema#', schema.id);
@@ -41,7 +41,7 @@ describe('GET request wrapper:',
     });
 
     it('should fail to retrieve the URL', function(done) {
-      var url = 'http://www.google.com/404';
+      var url = 'http://jayschema.org/this-does-not-exist';
       httpLoader(url, function(err) {
         assert(err);
         done();
@@ -49,7 +49,7 @@ describe('GET request wrapper:',
     });
 
     it('should fail to get a schema', function(done) {
-      var url = 'http://www.google.com/';
+      var url = 'http://jayschema.org/';
       httpLoader(url, function(err) {
         assert(err);
         done();
