@@ -3,7 +3,7 @@
         "description": "references to external schemas aren't resolved unless using async",
         "schema": {
             "properties": {
-                "location": { "$ref": "http://jayschema.org/geo.json#" }
+                "location": { "$ref": "http://jayschema.org/test-targets/geo.json#" }
             }
         },
         "tests": [
