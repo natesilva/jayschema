@@ -8,7 +8,7 @@ var should = require('should')
   , v4Schema = require('../lib/suites/draft-04/json-schema-draft-v4.json')
   ;
 
-var schemaUrl = 'http://jayschema.org/json-schema-draft-4.json#';
+var schemaUrl = 'http://jayschema.org/test-targets/json-schema-draft-4.json#';
 
 describe('JSON schema self-validation test:', function() {
   describe('validate meta-schema (synchronously):', function() {
