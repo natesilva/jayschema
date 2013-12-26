@@ -3,7 +3,7 @@
         "description": "asynchronously resolve a reference to an external schema",
         "schema": {
             "properties": {
-                "location": { "$ref": "http://jayschema.org/geo.json#" }
+                "location": { "$ref": "http://jayschema.org/test-targets/geo.json#" }
             }
         },
         "tests": [
@@ -33,7 +33,7 @@
         "description": "asynchronously resolve a reference to an external schema (bare URI)",
         "schema": {
             "properties": {
-                "location": { "$ref": "http://jayschema.org/geo.json" }
+                "location": { "$ref": "http://jayschema.org/test-targets/geo.json" }
             }
         },
         "tests": [
