@@ -52,7 +52,7 @@ describe('GET request wrapper:',
     it('should fail to get a schema, even though the URL is valid',
       function(done)
     {
-      var url = 'http://jayschema.org/';
+      var url = 'http://jayschema.org/test-targets/not-a-schema.html';
       httpLoader(url, function(err) {
         assert(err);
         done();
