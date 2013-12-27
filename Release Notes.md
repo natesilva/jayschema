@@ -1,3 +1,7 @@
+# 0.2.2
+
+* **BUGFIX/ENHANCEMENT**: Instances and schemas which do not have the `Object` prototype are now supported. Thanks to [adrianlang](https://github.com/adrianlang).
+
 # 0.2.1
 
 * **BUGFIX/ENHANCEMENT**: Properly support the Draft v3 `date` and `time` formats.
