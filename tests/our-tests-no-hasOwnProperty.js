@@ -22,6 +22,12 @@ var BLACKLISTED_TESTS = {
 };
 
 function duplicateWithNullPrototype(src) {
+  if (!(src instanceof Object)) { return src; }
+
+  if (Array.isArray(src)) {
+    return Array.prototype.map.call(src, duplicateWithNullPrototype);
+  }
+
   var dest = Object.create(null);
   Object.keys(src).forEach(function(key) {
     if (src[key] instanceof Object) {
