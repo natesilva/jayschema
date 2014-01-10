@@ -150,6 +150,11 @@
                 "description": "does not match schema (label can't end with a hyphen)",
                 "data": "minus-.com",
                 "valid": false
+            },
+            {
+                "description": "does not match schema (IPv4 address is not a hostname)",
+                "data": "127.0.0.1",
+                "valid": false
             }
         ]
     },
