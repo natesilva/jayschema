@@ -1,3 +1,7 @@
+# 0.2.3
+
+* **BUGFIX**: Better logic for validating the `hostname` format. IPv4 addresses are no longer recognized as hostnames. Thanks to [k7sleeper](https://github.com/k7sleeper).
+
 # 0.2.2
 
 * **BUGFIX/ENHANCEMENT**: Instances and schemas which do not have the `Object` prototype are now supported. Thanks to [adrianlang](https://github.com/adrianlang).
