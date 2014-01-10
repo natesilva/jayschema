@@ -79,7 +79,9 @@ function getTests(dir) {
   return files;
 }
 
-describe('Our test suite (running synchronously):', function() {
+describe('Our test suite (running synchronously, instances without ' +
+  'Object.prototype):', function()
+{
 
   var files = getTests(path.join(__dirname, 'our-tests'));
 
