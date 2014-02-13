@@ -62,4 +62,28 @@ describe('Custom loaders:', function() {
       });
     });
   });
+
+    describe('should not hang when exception is thrown in validate callback', function () {
+        it('this test case should intentionally fail - not hang forever', function (done) {
+
+            var schema = { 'type': 'integer', 'multipleOf': 8 };
+
+            var loader = function (ref, callback) {
+                process.nextTick(function () {
+                    callback(null, schema);
+                });
+            };
+
+            var js = new JaySchema(loader);
+
+            var instance = 63;
+
+            js.validate(instance, schema, function(errs) {
+                should.not.exist(errs);
+                done();
+            });
+        });
+    });
+
+
 });
