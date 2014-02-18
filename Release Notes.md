@@ -1,3 +1,9 @@
+# 0.2.4
+
+* **BUGFIX**: Schema ID URLs that have `..` in them are normalized and can now be used. Thanks to [alexbirkett](https://github.com/alexbirkett).
+
+* **BUGFIX**: Fixed a hang/timeout when a loader function is provided, but no external schemas are loaded. Thanks to [alexbirkett](https://github.com/alexbirkett).
+
 # 0.2.3
 
 * **BUGFIX**: Better logic for validating the `hostname` format. IPv4 addresses are no longer recognized as hostnames. Thanks to [k7sleeper](https://github.com/k7sleeper).
