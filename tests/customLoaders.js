@@ -62,4 +62,51 @@ describe('Custom loaders:', function() {
       });
     });
   });
+
+    describe('passing schema url directly to validate function should work', function () {
+        it('should work', function (done) {
+
+            var schema = { 'type': 'integer', 'multipleOf': 8 };
+
+            var loader = function (ref, callback) {
+                process.nextTick(function () {
+                    ref.should.equal('homemadescheme://host.com/path');
+                    callback(null, schema);
+                });
+            };
+
+            var js = new JaySchema(loader);
+
+            var instance = 64;
+
+            js.validate(instance, "homemadescheme://host.com/path", function(errs) {
+                console.log(errs);
+                should.not.exist(errs);
+                done();
+            });
+        });
+
+        it('.. is legal in a url', function (done) {
+
+           var schema = { 'type': 'integer', 'multipleOf': 8 };
+
+            var loader = function (ref, callback) {
+                process.nextTick(function () {
+                    ref.should.equal('homemadescheme://host.com/../path');
+                    callback(null, schema);
+                });
+            };
+
+            var js = new JaySchema(loader);
+
+            var instance = 64;
+
+            js.validate(instance, "homemadescheme://host.com/../path", function(errs) {
+                console.log(errs);
+                should.not.exist(errs);
+                done();
+            });
+        });
+    });
+
 });
