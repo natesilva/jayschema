@@ -97,7 +97,7 @@ describe('JSON references:',
   describe('ensure that JaySchema.prototype.isRegistered(id) works',
     function()
   {
-    var jj = new JaySchema();    
+    var jj = new JaySchema();
     var sch = {
       id: 'http://foo.bar/baz#',
       type: 'string',
@@ -117,6 +117,29 @@ describe('JSON references:',
       jj.isRegistered('http://qux.zzz/baz#').should.be.false;
     });
 
+  });
+
+  describe('ensure async validation works even if no external schemas are ' +
+    'referenced', function()
+  {
+
+    var instance = 63;
+    var schema = { 'type': 'integer', 'multipleOf': 8 };
+
+    var loader = function (ref, callback) {
+        process.nextTick(function () {
+            callback(null, schema);
+        });
+    };
+
+    var jj = new JaySchema();
+
+    it('should not time out', function(done) {
+      jj.validate(instance, schema, function(errs) {
+        should.exist(errs);
+        done();
+      });
+    });
   });
 
 });
