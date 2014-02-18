@@ -132,7 +132,7 @@ describe('JSON references:',
         });
     };
 
-    var jj = new JaySchema();
+    var jj = new JaySchema(loader);
 
     it('should not time out', function(done) {
       jj.validate(instance, schema, function(errs) {
