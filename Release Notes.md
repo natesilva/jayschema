@@ -1,3 +1,16 @@
+# 0.2.5
+
+* **BUGFIX**: Explicitly specifying an unrecognized top-level `$schema` (something other than JSON Schema Draft 4) now returns a standard JaySchema error instead of dumping you out to a stack trace. Thanks to [schimmy](https://github.com/schimmy).
+* **BUGFIX/ENHANCEMENT**: You can now specify the “current version” `$schema`. Previously the only schema you could explicitly specify was the Draft 4 schema. In other words, any the following at the top of a schema def will work:
+      * `{ "$schema": "http://json-schema.org/draft-04/schema#" }`
+          * this has always been supported
+      * `{ "$schema": "http://json-schema.org/schema#"}`
+          * this is new and will use the draft-04 schema rules
+      * (no `$schema` value)
+          * this has always been supported and will use the draft-04 schema rules
+
+  Thanks to [schimmy](https://github.com/schimmy).
+
 # 0.2.4
 
 * **BUGFIX**: Schema ID URLs that have `..` in them are normalized and can now be used. Thanks to [alexbirkett](https://github.com/alexbirkett).
