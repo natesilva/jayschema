@@ -1,0 +1,56 @@
+[
+    {
+        "description": "current-version $schema spec is allowed",
+        "schema": {
+            "$schema": "http://json-schema.org/schema#",
+            "type": "integer"
+        },
+        "tests": [
+            {
+                "description": "matches schema",
+                "data": 42,
+                "valid": true
+            },
+            {
+                "description": "does not match schema",
+                "data": "abc",
+                "valid": false
+            }
+        ]
+    },
+
+    {
+        "description": "explicit draft 4 $schema spec is allowed",
+        "schema": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "type": "integer"
+        },
+        "tests": [
+            {
+                "description": "matches schema",
+                "data": 42,
+                "valid": true
+            },
+            {
+                "description": "does not match schema",
+                "data": "abc",
+                "valid": false
+            }
+        ]
+    },
+
+    {
+        "description": "unrecognized $schema spec is not allowed",
+        "schema": {
+            "$schema": "http://json-schema.org/draft-99/schema#",
+            "type": "integer"
+        },
+        "tests": [
+            {
+                "description": "fails against unrecognized $schema",
+                "data": 42,
+                "valid": false
+            }
+        ]
+    }
+]
