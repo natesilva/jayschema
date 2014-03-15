@@ -24,6 +24,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(null).should.not.equal('array');
       core.apparentType({foo: [1, 2, 3]}).should.not.equal('array');
       core.apparentType('hello world').should.not.equal('array');
+      core.apparentType(undefined).should.not.equal('array');
     });
   });
 
@@ -43,6 +44,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(null).should.not.equal('boolean');
       core.apparentType({foo: [1, 2]}).should.not.equal('boolean');
       core.apparentType('hello world').should.not.equal('boolean');
+      core.apparentType(undefined).should.not.equal('boolean');
     });
   });
 
@@ -61,6 +63,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(null).should.not.equal('integer');
       core.apparentType({foo: [1, 2]}).should.not.equal('integer');
       core.apparentType('hello world').should.not.equal('integer');
+      core.apparentType(undefined).should.not.equal('integer');
     });
   });
 
@@ -78,6 +81,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(null).should.not.equal('number');
       core.apparentType({foo: [1, 2, 3]}).should.not.equal('number');
       core.apparentType('hello world').should.not.equal('number');
+      core.apparentType(undefined).should.not.equal('number');
     });
   });
 
@@ -95,6 +99,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(42.1).should.not.equal('null');
       core.apparentType({foo: [1, 2, 3]}).should.not.equal('null');
       core.apparentType('hello world').should.not.equal('null');
+      core.apparentType(undefined).should.not.equal('null');
     });
   });
 
@@ -115,6 +120,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(42.1).should.not.equal('object');
       core.apparentType(null).should.not.equal('object');
       core.apparentType('hello world').should.not.equal('object');
+      core.apparentType(undefined).should.not.equal('object');
     });
 
     it('should not mistake null or Array for "object"', function() {
@@ -137,6 +143,7 @@ describe('Core § 3.5 JSON Schema primitive types:', function() {
       core.apparentType(42.1).should.not.equal('string');
       core.apparentType(null).should.not.equal('string');
       core.apparentType({foo: 'hello'}).should.not.equal('string');
+      core.apparentType(undefined).should.not.equal('string');
     });
   });
 });
