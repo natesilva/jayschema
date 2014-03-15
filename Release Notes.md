@@ -1,3 +1,7 @@
+# 0.2.6
+
+* **BUGFIX**: An `undefined` instance is no longer tested as if it’s an `object`. Fixes a crash that occurred if the instance was `undefined` and the schema used a `required` keyword. Thanks to [emschwartz](https://github.com/emschwartz).
+
 # 0.2.5
 
 * **BUGFIX**: Explicitly specifying an unrecognized top-level `$schema` (something other than JSON Schema Draft 4) now returns a standard JaySchema error instead of dumping you out to a stack trace. Thanks to [schimmy](https://github.com/schimmy).
