@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "should": "~3.1.2",
-    "mocha": "~1.17.1"
+    "mocha": "~1.18.0"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha tests"
