@@ -1,3 +1,8 @@
+# 0.2.7
+
+* **BUGFIX:** Handle falsy values correctly in `ValidationError`. Thanks to [larose](https://github.com/larose).
+* Other code cleanups. Thanks again to [larose](https://github.com/larose).
+
 # 0.2.6
 
 * **BUGFIX**: An `undefined` instance is no longer tested as if it’s an `object`. Fixes a crash that occurred if the instance was `undefined` and the schema used a `required` keyword. Thanks to [emschwartz](https://github.com/emschwartz).
