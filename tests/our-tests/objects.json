@@ -221,7 +221,8 @@
             "properties": {
                 "firstName": { "type": "string" },
                 "lastName": { "type": "string" },
-                "age": { "type": "integer" }
+                "age": { "type": "integer" },
+                "payment": { "enum": [ "cash", "credit", null ] }
             }
         },
         "tests": [
@@ -231,7 +232,19 @@
                     "firstName": "Mohammed",
                     "lastName": "Chang",
                     "age": 99,
-                    "city": "Lagos"
+                    "city": "Lagos",
+                    "payment": "cash"
+                },
+                "valid": true
+            },
+            {
+                "description": "matches schema",
+                "data": {
+                    "firstName": "Mohammed",
+                    "lastName": "Chang",
+                    "age": 99,
+                    "city": "Lagos",
+                    "payment": null
                 },
                 "valid": true
             },
@@ -241,7 +254,19 @@
                     "firstName": "Mohammed",
                     "lastName": "Chang",
                     "age": 49.5,
-                    "city": "Lagos"
+                    "city": "Lagos",
+                    "payment": "credit"
+                },
+                "valid": false
+            },
+            {
+                "description": "does not match schema",
+                "data": {
+                    "firstName": "Mohammed",
+                    "lastName": "Chang",
+                    "age": 23,
+                    "city": "Lagos",
+                    "payment": "wire"
                 },
                 "valid": false
             }
