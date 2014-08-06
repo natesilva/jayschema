@@ -2,7 +2,7 @@
   "author": "Nate Silva <nate@natesilva.com> (http://natesilva.com/)",
   "name": "jayschema",
   "description": "A comprehensive JSON Schema validator for Node.js",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "homepage": "https://github.com/natesilva/jayschema",
   "repository": {
     "type": "git",

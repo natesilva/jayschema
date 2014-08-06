@@ -1,3 +1,7 @@
+# 0.2.8
+
+* **BUGFIX:** `enum` properties with `null` values now work. Thanks to [alexkwolfe](https://github.com/alexkwolfe).
+
 # 0.2.7
 
 * **BUGFIX:** Handle falsy values correctly in `ValidationError`. Thanks to [larose](https://github.com/larose).
