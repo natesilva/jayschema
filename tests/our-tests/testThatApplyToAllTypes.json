@@ -94,7 +94,7 @@
               "valid": true
           },
           {
-              "description": "item matches schema",
+              "description": "item does not match schema",
               "data": 42,
               "valid": false
           }
