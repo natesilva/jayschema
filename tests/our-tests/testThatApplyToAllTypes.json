@@ -73,6 +73,35 @@
     },
 
     {
+      "description": "enum keyword with null accepted",
+      "schema": {
+          "enum": ["foo", "bar", null]
+      },
+      "tests": [
+          {
+              "description": "item matches schema",
+              "data": "foo",
+              "valid": true
+          },
+          {
+              "description": "item matches schema",
+              "data": "bar",
+              "valid": true
+          },
+          {
+              "description": "item matches schema",
+              "data": null,
+              "valid": true
+          },
+          {
+              "description": "item matches schema",
+              "data": 42,
+              "valid": false
+          }
+      ]
+    },
+
+    {
         "description": "allOf keyword",
         "schema": {
             "type": "array",
