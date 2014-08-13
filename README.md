@@ -8,7 +8,7 @@ A [JSON Schema](http://json-schema.org/documentation.html) validator for Node.js
 
 ## Install
 
-    npm install jayschema
+    npm install -g jayschema
 
 ## Usage
 
@@ -177,3 +177,23 @@ If, instead, you want the list of *all* missing schemas referenced by all regist
 * `ipv4`: Must be a dotted-quad IPv4 address.
 * `ipv6`: Must be a valid IPv6 address as per [RFC 2373 section 2.2](http://tools.ietf.org/html/rfc2373#section-2.2).
 * `uri`: As in [RFC 3986 Appendix A](http://tools.ietf.org/html/rfc3986#appendix-A), including relative URIs (no scheme part, fragment-only), with the exception that well-formedness of internal elements, including percent encoding and authority strings, is not verified.
+
+
+## Cli
+
+```
+jayschema [Options] <instance> [<schema>]
+	if <schema> is omitted, the <instance> will be validated
+	against the JSON Schema Draft v4 meta-schema
+
+Examples:
+  jayschema path/to/instance path/to/schema                                                               example without register
+  jayschema --register path/to/schema/register path/to/instance path/to/schema                            example with one register
+  jayschema --register path/to/schema/register1,path/to/file/register2 path/to/instance path/to/schema    example to add two registers
+
+
+Options:
+  -r, --register  register externally-referenced schemas
+  -h, --help       output usage information             
+  -v, --version    output version                       
+```

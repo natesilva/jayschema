@@ -6,22 +6,71 @@ var JaySchema = require('../lib/jayschema.js')
   , fs = require('fs')
   , path = require('path')
   ;
+var packagejson = require(path.join(__dirname, '..', 'package.json'));  
 
 // support Node 0.6.x
 var existsSync = fs.existsSync || path.existsSync;
 
-var META_SCHEMA_PATH = path.join(__dirname, '..', 'lib', 'suites', 'draft-04',
-  'json-schema-draft-v4.json');
+var META_SCHEMA_PATH = path.join(__dirname, '..', 'lib', 'suites', 'draft-04', 'json-schema-draft-v4.json');
 var META_SCHEMA = require(META_SCHEMA_PATH);
 
-var instance = process.argv[2];
-var schema = process.argv[3] || META_SCHEMA_PATH;
+// init yargs
+var yargs = require('yargs')
+    .usage('jayschema [Options] <instance> [<schema>]\n\tif <schema> is omitted, the <instance> will be validated\n\tagainst the JSON Schema Draft v4 meta-schema')
+    .example("jayschema path/to/instance path/to/schema", "example without register")
+    .example("jayschema --register path/to/schema/register path/to/instance path/to/schema", "example with one register")
+    .example("jayschema --register path/to/schema/register1,path/to/file/register2 path/to/instance path/to/schema", "example to add multiple register")
+    .options('r', {
+        "alias" : 'register',
+        //~ "default" : [],
+        "describe" : 'register externally-referenced schemas'
+    })
+    .options('h', {
+        "alias" : 'help',
+        "describe" : ' output usage information'
+    })
+    .options('v', {
+        "alias" : 'version',
+        "describe" : ' output version'
+    })
+;    
+options = yargs.argv;
+    
+// read commands <instance> and <schema>
+var instance = undefined;
+var schema = META_SCHEMA_PATH;
+if (options._.length > 0) { instance = options._[0]; }
+if (options._.length > 1) { schema = options._[1]; }
 
 var syntax = function() {
-  console.log('Syntax: jayschema <instance> [<schema>]');
-  console.log('\tif <schema> is omitted, the <instance> will be validated');
-  console.log('\tagainst the JSON Schema Draft v4 meta-schema');
+  yargs.showHelp();
+  process.exit(0);
 };
+
+if (options.h) {
+  return syntax();
+}
+
+if (options.v) {
+  var version = []
+  version.push(packagejson.name)
+  version.push(" v")
+  version.push(packagejson.version)
+  version = version.join("")
+  console.log(version)
+  process.exit(0);
+}
+
+var registers = [];
+if (options.r) {
+  registers = options.r.split(",");
+  for ( idx in registers) {
+    if (!existsSync(registers[idx])) {
+      console.error('ERR: register', '"' + registers[idx] + '"', 'not found');
+      return;
+    }
+  }
+}
 
 if (!instance || !schema) {
   return syntax();
@@ -55,6 +104,9 @@ try {
 }
 
 var js = new JaySchema();
+for (idx in registers) {
+  js.register(require(registers[idx]));
+}
 
 var schemaErrors = js.validate(schemaJson, META_SCHEMA);
 if (schemaErrors.length) {
