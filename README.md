@@ -140,7 +140,7 @@ See [Schema loading](#schema-loading).
 
 ### JaySchema.prototype.addFormat(formatName, handler)
 
-Add a custom handler for the `format` keyword. Whenever a schema uses the `format` keyword, with the given by `formatName`, your handler will be called.
+Add a custom handler for the `format` keyword. Whenever a schema uses the `format` keyword, with the given `formatName`, your handler will be called.
 
 The handler receives the value to be validated, and returns `null` if the value is valid, or a `string` (description of the error) if the value is not valid.
 
