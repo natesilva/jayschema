@@ -1,10 +1,14 @@
+#0.3.0
+
+* **FEATURE:** [Custom `format` validators](https://github.com/natesilva/jayschema#jayschemaprototypeaddformatformatname-handler) are now supported. The syntax is compatible with that of [tv4](https://github.com/geraintluff/tv4#addformatformat-validationfunction). Thanks to [alexkwolfe](https://github.com/alexkwolfe) for the suggestion.
+
 # 0.2.8
 
-* **BUGFIX:** `enum` properties with `null` values now work. Thanks to [alexkwolfe](https://github.com/alexkwolfe).
+* **BUGFIX**: `enum` properties with `null` values now work. Thanks to [alexkwolfe](https://github.com/alexkwolfe).
 
 # 0.2.7
 
-* **BUGFIX:** Handle falsy values correctly in `ValidationError`. Thanks to [larose](https://github.com/larose).
+* **BUGFIX**: Handle falsy values correctly in `ValidationError`. Thanks to [larose](https://github.com/larose).
 * Other code cleanups. Thanks again to [larose](https://github.com/larose).
 
 # 0.2.6

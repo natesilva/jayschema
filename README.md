@@ -5,6 +5,7 @@ A [JSON Schema](http://json-schema.org/documentation.html) validator for Node.js
 * Complete validation coverage of JSON Schema Draft v4.
 * Optional dynamic loader for referenced schemas (load schemas from a database or the web)
 * Useful error messages.
+* **NEW:** Supports custom validators for the `format` keword.
 
 ## Install
 
@@ -53,6 +54,27 @@ js.validate(instance, schema, function(errs) {
 });
 ```
 
+### Custom format validators
+
+Create a custom validator for the JSON Schema `format` keyword:
+
+```js
+var JaySchema = require('jayschema');
+var js = new JaySchema();
+
+js.addFormat('phone-us', function(value) {
+  var PHONE_US_REGEXP = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+  if (PHONE_US_REGEXP.test(value)) { return null; }
+  return 'must be a US phone number';
+});
+
+var instance = '212-555-';
+var schema = { "type": "string", "format": "phone-us" };
+
+console.log(js.validate(instance, schema));
+// fails with error description: must be a US phone number
+````
+
 ## Why JSON Schema?
 
 * Validate JSON server-side:
@@ -79,7 +101,7 @@ function loader(ref, callback) {
     // [ load your schema! ]
     if (errorOccurred) {
         callback(err);
-    } else {      
+    } else {
         callback(null, schema);
     }
 }
@@ -115,6 +137,12 @@ See [Schema loading](#schema-loading).
 Return boolean indicating whether the specified schema id has previously been registered.
 
 See [Schema loading](#schema-loading).
+
+### JaySchema.prototype.addFormat(formatName, handler)
+
+Add a custom handler for the `format` keyword. Whenever a schema uses the `format` keyword, with the given by `formatName`, your handler will be called.
+
+The handler receives the value to be validated, and returns `null` if the value is valid, or a `string` (description of the error) if the value is not valid.
 
 ### Loaders
 
@@ -153,7 +181,7 @@ Pass a `loader` callback to the `JaySchema` constructor. When an external schema
 This works with synchronous or async code.
 
 1. First, `register()` the main schemas you plan to use.
-2. Next, call `getMissingSchemas`, which returns an array of externally-referenced schemas. 
+2. Next, call `getMissingSchemas`, which returns an array of externally-referenced schemas.
 3. Retrieve and `register()` each missing schema.
 4. Repeat from step 2 until there are no more missing schemas.
 
@@ -169,7 +197,7 @@ If, instead, you want the list of *all* missing schemas referenced by all regist
 
 ## Format specifiers
 
-**JaySchema** supports the following values for the optional `format` keyword:
+For the `format` keyword, **JaySchema** allows you to add custom validation functions (see [`addFormat`](#jayschemaprototypeaddformatformatname-handler)). In addition, the following built-in formats are supported:
 
 * `date-time`: Must match the `date-time` specification given in [RFC 3339, Section 5.6](https://tools.ietf.org/html/rfc3339#section-5.6). This expects *both* a date and a time. For date-only validation or time-only validation, JaySchema supports the older draft v3 `date` and `time` formats.
 * `hostname`: Must match the “Preferred name syntax” given in [RFC 1034, Section 3.5](https://tools.ietf.org/html/rfc1034#section-3.5), with the exception that hostnames are permitted to begin with a digit, as per [RFC 1123 Section 2.1](http://tools.ietf.org/html/rfc1123#section-2.1).
