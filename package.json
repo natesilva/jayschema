@@ -2,7 +2,7 @@
   "author": "Nate Silva <nate@natesilva.com> (http://natesilva.com/)",
   "name": "jayschema",
   "description": "A comprehensive JSON Schema validator for Node.js",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "homepage": "https://github.com/natesilva/jayschema",
   "repository": {
     "type": "git",
@@ -19,11 +19,11 @@
     "node": ">=0.6.6"
   },
   "dependencies": {
-    "when": "~3.1.0"
+    "when": "~3.4.4"
   },
   "devDependencies": {
-    "should": "~3.3.1",
-    "mocha": "~1.18.0"
+    "should": "~4.0.4",
+    "mocha": "~1.21.4"
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha tests"

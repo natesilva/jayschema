@@ -106,21 +106,21 @@ describe('SchemaRegistry:', function() {
       var missing;
       missing = reg.register(sch1);
       missing.should.have.length(2);
-      missing.should.include('http://company.com/foo/');
-      missing.should.include('http://organization.org/bar/');
+      missing.should.containEql('http://company.com/foo/');
+      missing.should.containEql('http://organization.org/bar/');
 
       missing = reg.register(sch2);
       missing.should.have.length(3);
-      missing.should.include('http://organization.org/bar/');
-      missing.should.include('http://foo.bar/qux');
-      missing.should.include('http://some.site/and/some/schema');
+      missing.should.containEql('http://organization.org/bar/');
+      missing.should.containEql('http://foo.bar/qux');
+      missing.should.containEql('http://some.site/and/some/schema');
 
       missing = reg.getMissingSchemas();
       missing.should.have.length(4);
-      missing.should.include('http://company.com/foo/');
-      missing.should.include('http://organization.org/bar/');
-      missing.should.include('http://foo.bar/qux');
-      missing.should.include('http://some.site/and/some/schema');
+      missing.should.containEql('http://company.com/foo/');
+      missing.should.containEql('http://organization.org/bar/');
+      missing.should.containEql('http://foo.bar/qux');
+      missing.should.containEql('http://some.site/and/some/schema');
     });
   });
 
@@ -265,7 +265,7 @@ describe('SchemaRegistry:', function() {
       var missing;
       missing = reg.register(masterSchema);
       missing.should.have.length(1);
-      missing.should.include('https://example.org/api/address.schema.json');
+      missing.should.containEql('https://example.org/api/address.schema.json');
 
       missing = reg.register(addressSchema);
       missing.should.be.empty;
