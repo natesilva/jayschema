@@ -1,4 +1,8 @@
-#0.3.0
+# 0.3.1
+
+* **BUGFIX**: When anonymous sub-schemas were used with `oneOf` or `anyOf`, the error object for the sub-schemas was being overridden due to a variable scope problem. Thanks to [mrhooray](https://github.com/mrhooray).
+
+# 0.3.0
 
 * **FEATURE:** [Custom `format` validators](https://github.com/natesilva/jayschema#jayschemaprototypeaddformatformatname-handler) are now supported. The syntax is compatible with that of [tv4](https://github.com/geraintluff/tv4#addformatformat-validationfunction). Thanks to [alexkwolfe](https://github.com/alexkwolfe) for the suggestion.
 
