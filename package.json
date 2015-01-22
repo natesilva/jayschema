@@ -19,6 +19,7 @@
     "node": ">=0.6.6"
   },
   "dependencies": {
+    "yargs": "~1.2.6",
     "when": "~3.4.6"
   },
   "devDependencies": {
