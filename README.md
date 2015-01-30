@@ -13,6 +13,14 @@ A [JSON Schema](http://json-schema.org/documentation.html) validator for Node.js
 
 ## Usage
 
+### CLI
+
+If you install the package globally (`npm install -g jayschema`), then you can directly invoke it from the command-line:
+
+```shell
+$ jayschema my-schema.json
+```
+
 ### Basic usage
 
 ```js
