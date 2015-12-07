@@ -22,6 +22,11 @@
                 "valid": true
             },
             {
+                "description": "matches schema (even on daylight saving time)",
+                "data": "2002-03-31T22:00:00.000Z",
+                "valid": true
+            },
+            {
                 "description": "does not match schema (invalid mday)",
                 "data": "2013-02-29T03:40:15Z",
                 "valid": false
@@ -49,6 +54,11 @@
             {
                 "description": "matches schema",
                 "data": "2013-02-08",
+                "valid": true
+            },
+            {
+                "description": "matches schema (even on daylight saving time)",
+                "data": "2002-03-31",
                 "valid": true
             },
             {
