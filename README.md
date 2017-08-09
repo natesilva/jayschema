@@ -1,5 +1,11 @@
 # JaySchema
 
+## Unmaintained
+
+:warning: This project is no longer maintained. This was one of the first validators to support JSON Schema v4, and to pass all of the tests that were available at that time. But today there are other options that use better parsing and are much faster, such as [ajv](https://github.com/epoberezkin/ajv), [is-my-json-valid](https://github.com/mafintosh/is-my-json-valid), and many more. If you’re happy with JaySchema, feel free to continue using it. If you’d like to take ownership of the project, contact me, but you’re probably better off switching to a modern alternative.
+
+## About
+
 A [JSON Schema](http://json-schema.org/documentation.html) validator for Node.js.
 
 * Complete validation coverage of JSON Schema Draft v4.
